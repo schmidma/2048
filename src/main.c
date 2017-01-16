@@ -85,7 +85,10 @@ int main(int argc, char* args[]) {
         printf("SDL_Init was successful!\n");
     }
 
-    SDL_Window *screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
+    SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
+	SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
+	
+	SDL_SetRenderDrawColor(renderer, 100, 200, 150, SDL_ALPHA_OPAQUE);
 
     print_fields(fields);
     
@@ -99,6 +102,10 @@ int main(int argc, char* args[]) {
                             //LEFT
                             spawn_rand_field(fields);
                             print_fields(fields);
+							
+							srand((unsigned int)time(NULL));
+							SDL_RenderDrawLine(renderer, rand()%640, rand()%480, rand()%640, rand()%480);
+							SDL_RenderPresent(renderer);
                             break;
                         case SDLK_RIGHT:
                             //RIGHT
@@ -110,6 +117,7 @@ int main(int argc, char* args[]) {
                             //DOWN
                             break;
                         case SDLK_ESCAPE:
+							SDL_DestroyRenderer(renderer);
                             SDL_Quit();
                             exit(EXIT_SUCCESS);
                         default:
