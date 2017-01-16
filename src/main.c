@@ -95,26 +95,28 @@ int main(int argc, char* args[]) {
 
     SDL_EnableUNICODE( 1 );
 
-    while (!quit) {
-            while(SDL_PollEvent(&event)) {
-                    switch( event.type ){
-                    /* Keyboard event */
-                    /* Pass the event data onto PrintKeyInfo() */
-                    case SDL_KEYDOWN:
-                    case SDL_KEYUP:
-                        //TODO: keyInfo: https://www.libsdl.org/release/SDL-1.2.15/docs/html/guideinputkeyboard.html
-                        //PrintKeyInfo( &event.key );
+    while( SDL_PollEvent( &event ) ){
+        switch( event.type ){
+                /* Look for a keypress */
+            case SDL_KEYDOWN:
+                /* Check the SDLKey values and move change the coords */
+                switch( event.key.keysym.sym ){
+                    case SDLK_LEFT:
+                        //LEFT
                         break;
-
-                    /* SDL_QUIT event (window close) */
-                    case SDL_QUIT:
-                        quit = 1;
+                    case SDLK_RIGHT:
+                        //RIGHT
                         break;
-
+                    case SDLK_UP:
+                        //UP
+                        break;
+                    case SDLK_DOWN:
+                        //DOWN
+                        break;
                     default:
                         break;
                 }
-            }
+        }
     }
 
     SDL_Quit();
