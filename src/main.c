@@ -68,10 +68,6 @@ void print_fields(int fields[DIMENSION][DIMENSION]) {
     printf("\n");
 }
 
-const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 480;
-const char* WINDOW_TITLE = "SDL Start";
-
 int main(int argc, char* args[]) {
 
     //INITIALIZE VARIABLES
@@ -91,6 +87,8 @@ int main(int argc, char* args[]) {
 
     SDL_Window *screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
 
+    print_fields(fields);
+    
     while (!quit) {
         while( SDL_PollEvent( &event ) ){
             switch( event.type ){
@@ -99,6 +97,8 @@ int main(int argc, char* args[]) {
                     switch( event.key.keysym.sym ){
                         case SDLK_LEFT:
                             //LEFT
+                            spawn_rand_field(fields);
+                            print_fields(fields);
                             break;
                         case SDLK_RIGHT:
                             //RIGHT
