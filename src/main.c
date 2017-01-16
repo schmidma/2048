@@ -89,14 +89,13 @@ int main(int argc, char* args[]) {
         printf("SDL_Init was successful!\n");
     }
 
-    SDL_Window *screen = SDL_CreateWindow("My Game Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL);
+    SDL_Window *screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
 
     while (!quit) {
         while( SDL_PollEvent( &event ) ){
             switch( event.type ){
-                    /* Look for a keypress */
                 case SDL_KEYDOWN:
-                    /* Check the SDLKey values and move change the coords */
+                    printf( "Key press detected\n" );
                     switch( event.key.keysym.sym ){
                         case SDLK_LEFT:
                             //LEFT
@@ -111,11 +110,19 @@ int main(int argc, char* args[]) {
                             //DOWN
                             break;
                         case SDLK_ESCAPE:
-                            quit = 0;
-                            break;
+                            SDL_Quit();
+                            exit(EXIT_SUCCESS);
                         default:
                             break;
                     }
+                    break;
+                    
+                case SDL_QUIT:
+                    SDL_Quit();
+                    exit(EXIT_SUCCESS);
+                    break;
+                default:
+                    break;
             }
         }
     }
