@@ -68,12 +68,42 @@ void print_fields(int fields[DIMENSION][DIMENSION]) {
     printf("\n");
 }
 
+void createSurface(SDL_Rect* rect[DIMENSION][DIMENSION], SDL_Renderer* renderer){
+	
+	int a,b;
+	int x=0;
+	int y=0;
+	for(a=0; a<DIMENSION; a++){
+		x=a*100+20;
+		for(b=0; b<DIMENSION; b++){
+			y=b*100+20;
+			SDL_Rect rtoDraw;
+			rtoDraw.x=x;
+			rtoDraw.y=y;
+			rtoDraw.w=100;
+			rtoDraw.h=100;
+			rect[a][b]=&rtoDraw;
+			int c=b*20+a*10;
+			SDL_SetRenderDrawColor(renderer, c, c, c, SDL_ALPHA_OPAQUE);
+			SDL_RenderFillRect(renderer, rect[a][b]);
+			SDL_RenderPresent(renderer);
+		}
+	}
+	
+}
+
+/*void print_FieldsOnScreen(int fields[DIMENSION][DIMENSION]){
+	int a,b;
+	
+}*/
+
 int main(int argc, char* args[]) {
 
     //INITIALIZE VARIABLES
     int round = 0;
     int points = 0;
     int fields[DIMENSION][DIMENSION] = {0};
+	SDL_Rect* surface[DIMENSION][DIMENSION];
     int quit = 0;
     SDL_Event event;
 
@@ -87,6 +117,8 @@ int main(int argc, char* args[]) {
 
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
+	
+	createSurface(surface,renderer);
 	
 	SDL_SetRenderDrawColor(renderer, 100, 200, 150, SDL_ALPHA_OPAQUE);
 
