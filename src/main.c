@@ -91,27 +91,32 @@ int main(int argc, char* args[]) {
 
     SDL_Window *screen = SDL_CreateWindow("My Game Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL);
 
-    while( SDL_PollEvent( &event ) ){
-        switch( event.type ){
-                /* Look for a keypress */
-            case SDL_KEYDOWN:
-                /* Check the SDLKey values and move change the coords */
-                switch( event.key.keysym.sym ){
-                    case SDLK_LEFT:
-                        //LEFT
-                        break;
-                    case SDLK_RIGHT:
-                        //RIGHT
-                        break;
-                    case SDLK_UP:
-                        //UP
-                        break;
-                    case SDLK_DOWN:
-                        //DOWN
-                        break;
-                    default:
-                        break;
-                }
+    while (!quit) {
+        while( SDL_PollEvent( &event ) ){
+            switch( event.type ){
+                    /* Look for a keypress */
+                case SDL_KEYDOWN:
+                    /* Check the SDLKey values and move change the coords */
+                    switch( event.key.keysym.sym ){
+                        case SDLK_LEFT:
+                            //LEFT
+                            break;
+                        case SDLK_RIGHT:
+                            //RIGHT
+                            break;
+                        case SDLK_UP:
+                            //UP
+                            break;
+                        case SDLK_DOWN:
+                            //DOWN
+                            break;
+                        case SDLK_ESCAPE:
+                            quit = 0;
+                            break;
+                        default:
+                            break;
+                    }
+            }
         }
     }
 
