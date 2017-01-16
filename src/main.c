@@ -81,19 +81,15 @@ int main(int argc, char* args[]) {
     int quit = 0;
     SDL_Event event;
 
-    if(SDL_Init(SDL_INIT_VIDEO) < 0)
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf( stderr, "Could not initialise SDL: %s\n", SDL_GetError() );
         exit(-1);
-    else
+    }
+    else {
         printf("SDL_Init was successful!\n");
-
-    if (!SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0)) {
-        fprintf( stderr, "Could not set video mode: %s\n", SDL_GetError() );
-            SDL_Quit();
-            exit( -1 );
     }
 
-    SDL_EnableUNICODE( 1 );
+    SDL_Window *screen = SDL_CreateWindow("My Game Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL);
 
     while( SDL_PollEvent( &event ) ){
         switch( event.type ){
