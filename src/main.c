@@ -68,22 +68,54 @@ void print_fields(int fields[DIMENSION][DIMENSION]) {
     printf("\n");
 }
 
+const int WINDOW_WIDTH = 640;
+const int WINDOW_HEIGHT = 480;
+const char* WINDOW_TITLE = "SDL Start";
+
 int main(int argc, char* args[]) {
 
     //INITIALIZE VARIABLES
     int round = 0;
     int points = 0;
     int fields[DIMENSION][DIMENSION] = {0};
-    int c;
+    int quit = 0;
+    SDL_Event event;
 
-    if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
-        printf("SDL_Init failed!\n");
+    if(SDL_Init(SDL_INIT_VIDEO) < 0)
+        fprintf( stderr, "Could not initialise SDL: %s\n", SDL_GetError() );
+        exit(-1);
     else
         printf("SDL_Init was successful!\n");
 
-    print_fields(fields);
-    spawn_rand_field(fields);
-    print_fields(fields);
+    if (!SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0)) {
+        fprintf( stderr, "Could not set video mode: %s\n", SDL_GetError() );
+            SDL_Quit();
+            exit( -1 );
+    }
+
+    SDL_EnableUNICODE( 1 );
+
+    while (!quit) {
+            while(SDL_PollEvent(&event)) {
+                    switch( event.type ){
+                    /* Keyboard event */
+                    /* Pass the event data onto PrintKeyInfo() */
+                    case SDL_KEYDOWN:
+                    case SDL_KEYUP:
+                        //TODO: keyInfo: https://www.libsdl.org/release/SDL-1.2.15/docs/html/guideinputkeyboard.html
+                        //PrintKeyInfo( &event.key );
+                        break;
+
+                    /* SDL_QUIT event (window close) */
+                    case SDL_QUIT:
+                        quit = 1;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+    }
 
     SDL_Quit();
 
