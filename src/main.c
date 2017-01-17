@@ -80,10 +80,10 @@ void updateSurface(SDL_Renderer* renderer, int dimension){
 
 	for(a=0; a<dimension; a++){
 
-        x=a*100+20;
+        x=a*105+25;
 
 		for(b=0; b<dimension; b++){
-			y=b*100+20;
+			y=b*105+25;
 
 			SDL_Rect rect;
 			rect.x=x;
@@ -99,6 +99,16 @@ void updateSurface(SDL_Renderer* renderer, int dimension){
 		}
 	}
 	SDL_RenderPresent(renderer);
+}
+
+void createSurface(SDL_Renderer* renderer, int dimension) {
+    SDL_SetRenderDrawColor(renderer, 255,255,255, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(renderer);
+
+	SDL_Rect box = {20,20,425,425};
+	SDL_SetRenderDrawColor(renderer, 0,0,0, SDL_ALPHA_OPAQUE);
+	SDL_RenderDrawRect(renderer, &box);
+
 }
 
 /*
@@ -127,6 +137,10 @@ void init_SDL() {
     }
 }
 
+const int FPS = 24;
+const int SCREENW = 640;
+const int SCREENH = 480;
+
 int main(int argc, char* args[]) {
 
     /* INITIALIZE VARIABLES */
@@ -135,6 +149,12 @@ int main(int argc, char* args[]) {
     int dimension = 4;
     int run = 1;
     int *fields;
+
+    Uint32 lastTick;
+    Uint32 currentTick;
+    int sleep;
+    double period = 1.0 / (double)FPS * 1000;
+    int milliPeriod = (int)period;
 
     fields = (int*)calloc(dimension*dimension, sizeof(int));
     if (fields == NULL) {
@@ -145,50 +165,29 @@ int main(int argc, char* args[]) {
     /* SDL VARIABLES */
     SDL_Event event;
 
-    /* TEXT VARIABLES
-    SDL_Surface* wsurface;
-    SDL_Surface* text_surface;
-	TTF_Font* tfont;
-    SDL_Color tcolor = {.r = 105, .g = 200, .b = 30, .a = 200};
-    SDL_Rect blit_position;
-     */
-
     init_SDL();
 
-    SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
+    SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREENW, SCREENH, SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
+
+	createSurface(renderer, dimension);
 
     print_fields(fields, dimension);
 
     while (run) {
+        lastTick = SDL_GetTicks();
+
         while( SDL_PollEvent( &event ) ){
             switch( event.type ){
                 case SDL_KEYDOWN:
                     /* ON KEYPRESS */
-
                     switch( event.key.keysym.sym ){
                         case SDLK_LEFT:
                             /* LEFT */
 
-                            spawn_rand_field(fields, dimension);
-                            print_fields(fields, dimension);
-
                             break;
                         case SDLK_RIGHT:
                             /* RIGHT */
-
-							/* TEXT
-                            srand((unsigned int)time(NULL));
-							wsurface = SDL_GetWindowSurface(screen);
-							text_surface = TTF_RenderText_Solid(TTF_STYLE_BOLD, "TEST", tcolor);
-							blit_position.x = rand()%500;
-							blit_position.y = rand()%300;
-							blit_position.w = 100;
-							blit_position.h = 100;
-							SDL_BlitSurface(text_surface, NULL, wsurface, blit_position);
-							SDL_FreeSurface(text_surface);
-							SDL_UpdateWindowSurface(screen);
-                             */
 
                             break;
                         case SDLK_UP:
@@ -213,8 +212,16 @@ int main(int argc, char* args[]) {
                 default:
                     break;
             }
+            updateSurface(renderer, dimension);
+
+
         }
-        updateSurface(renderer, dimension);
+        currentTick = SDL_GetTicks();
+
+        sleep = milliPeriod - (currentTick - lastTick);
+        if (sleep < 0) sleep = 0;
+        SDL_Delay(sleep);
+        printf("%d\n", sleep);
     }
 
     SDL_Quit();
