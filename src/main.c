@@ -97,6 +97,11 @@ void createSurface(SDL_Rect* rect[DIMENSION][DIMENSION], SDL_Renderer* renderer)
 	
 }*/
 
+void quit() {
+    SDL_Quit();
+    exit(EXIT_SUCCESS);
+}
+
 int main(int argc, char* args[]) {
 
     //INITIALIZE VARIABLES
@@ -104,7 +109,7 @@ int main(int argc, char* args[]) {
     int points = 0;
     int fields[DIMENSION][DIMENSION] = {0};
 	SDL_Rect* surface[DIMENSION][DIMENSION];
-    int quit = 0;
+    int run = 1;
     SDL_Event event;
 
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -124,7 +129,7 @@ int main(int argc, char* args[]) {
 
     print_fields(fields);
     
-    while (!quit) {
+    while (run) {
         while( SDL_PollEvent( &event ) ){
             switch( event.type ){
                 case SDL_KEYDOWN:
@@ -149,17 +154,15 @@ int main(int argc, char* args[]) {
                             //DOWN
                             break;
                         case SDLK_ESCAPE:
-							SDL_DestroyRenderer(renderer);
-                            SDL_Quit();
-                            exit(EXIT_SUCCESS);
+                            quit();
+                            break;
                         default:
                             break;
                     }
                     break;
                     
                 case SDL_QUIT:
-                    SDL_Quit();
-                    exit(EXIT_SUCCESS);
+                    quit();
                     break;
                 default:
                     break;
