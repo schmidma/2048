@@ -2,8 +2,8 @@
 //  main.c
 //  2048
 //
-//  Created by Maximilian Schmidt on 15/01/2017.
-//  Copyright © 2017 Maximilian Schmidt. All rights reserved.
+//  Created by Maximilian Schmidt and Björn Bargstädt
+//  Copyright © 2017 Maximilian Schmidt and Björn Bargstädt. All rights reserved.
 //
 
 /* INCLUDE */
