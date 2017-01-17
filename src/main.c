@@ -68,34 +68,35 @@ void print_fields(int fields[DIMENSION][DIMENSION]) {
     printf("\n");
 }
 
-void createSurface(SDL_Rect* rect[DIMENSION][DIMENSION], SDL_Renderer* renderer){
-	
+void updateSurface(SDL_Renderer* renderer){
 	int a,b;
 	int x=0;
 	int y=0;
+    
 	for(a=0; a<DIMENSION; a++){
-		x=a*100+20;
+		
+        x=a*100+20;
+        
 		for(b=0; b<DIMENSION; b++){
 			y=b*100+20;
-			SDL_Rect rtoDraw;
-			rtoDraw.x=x;
-			rtoDraw.y=y;
-			rtoDraw.w=100;
-			rtoDraw.h=100;
-			rect[a][b]=&rtoDraw;
+            
+			SDL_Rect rect;
+			rect.x=x;
+			rect.y=y;
+			rect.w=100;
+			rect.h=100;
+            
 			int c=b*20+a*10;
+            
 			SDL_SetRenderDrawColor(renderer, c, c, c, SDL_ALPHA_OPAQUE);
-			SDL_RenderFillRect(renderer, rect[a][b]);
-			SDL_RenderPresent(renderer);
+            
+			SDL_RenderFillRect(renderer, &rect);
 		}
 	}
-	
+	SDL_RenderPresent(renderer);
 }
 
-/*void print_FieldsOnScreen(int fields[DIMENSION][DIMENSION]){
-	int a,b;
-	
-}*/
+void print_FieldsOnScreen(int fields[DIMENSION][DIMENSION]) {}
 
 void quit() {
     SDL_Quit();
@@ -104,18 +105,22 @@ void quit() {
 
 int main(int argc, char* args[]) {
 
-    //INITIALIZE VARIABLES
+    /* INITIALIZE VARIABLES */
     int round = 0;
     int points = 0;
     int fields[DIMENSION][DIMENSION] = {0};
-	SDL_Rect* surface[DIMENSION][DIMENSION];
     int run = 1;
+    
+    /* SDL VARIABLES */
     SDL_Event event;
-	SDL_Surface* wsurface;
-	SDL_Surface* text_surface;
-	SDL_Rect blit_position;
-	SDL_Color tcolor = {.r = 105, .g = 200, .b = 30, .a = 200};
+    
+    /* TEXT VARIABLES
+    SDL_Surface* wsurface;
+    SDL_Surface* text_surface;
 	TTF_Font* tfont;
+    SDL_Color tcolor = {.r = 105, .g = 200, .b = 30, .a = 200};
+    SDL_Rect blit_position;
+     */
 
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf( stderr, "Could not initialise SDL: %s\n", SDL_GetError() );
@@ -127,10 +132,6 @@ int main(int argc, char* args[]) {
 
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
-	
-	createSurface(surface,renderer);
-	
-	SDL_SetRenderDrawColor(renderer, 100, 200, 150, SDL_ALPHA_OPAQUE);
 
     print_fields(fields);
     
@@ -138,19 +139,21 @@ int main(int argc, char* args[]) {
         while( SDL_PollEvent( &event ) ){
             switch( event.type ){
                 case SDL_KEYDOWN:
-                    printf( "Key press detected\n" );
+                    /* ON KEYPRESS */
+                    
                     switch( event.key.keysym.sym ){
                         case SDLK_LEFT:
-                            //LEFT
+                            /* LEFT */
+                            
                             spawn_rand_field(fields);
                             print_fields(fields);
-							
-							srand((unsigned int)time(NULL));
-							SDL_RenderDrawLine(renderer, rand()%640, rand()%480, rand()%640, rand()%480);
-							SDL_RenderPresent(renderer);
+                            
                             break;
                         case SDLK_RIGHT:
-							/*srand((unsigned int)time(NULL));
+                            /* RIGHT */
+                            
+							/* TEXT
+                            srand((unsigned int)time(NULL));
 							wsurface = SDL_GetWindowSurface(screen);
 							text_surface = TTF_RenderText_Solid(TTF_STYLE_BOLD, "TEST", tcolor);
 							blit_position.x = rand()%500;
@@ -159,14 +162,17 @@ int main(int argc, char* args[]) {
 							blit_position.h = 100;
 							SDL_BlitSurface(text_surface, NULL, wsurface, blit_position);
 							SDL_FreeSurface(text_surface);
-							SDL_UpdateWindowSurface(screen);*/
-                            //RIGHT
+							SDL_UpdateWindowSurface(screen);
+                             */
+                            
                             break;
                         case SDLK_UP:
-                            //UP
+                            /* UP */
+                            
                             break;
                         case SDLK_DOWN:
-                            //DOWN
+                            /* DOWN */
+                            
                             break;
                         case SDLK_ESCAPE:
                             quit();
@@ -183,6 +189,7 @@ int main(int argc, char* args[]) {
                     break;
             }
         }
+        updateSurface(renderer);
     }
 
     SDL_Quit();
