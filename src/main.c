@@ -6,14 +6,25 @@
 //  Copyright © 2017 Maximilian Schmidt. All rights reserved.
 //
 
+
+/* INCLUDE */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+/* MAKRO */
+
 #define DIMENSION 4
 
+/*
+ spawn_rand_field(int [][])
+ Parameter: fields
+ 
+ Fügt an einem zufällig gewähltem freien Feld eine "2" (nmbr) ein.
+ */
 void spawn_rand_field(int fields[DIMENSION][DIMENSION]) {
     int nmbr = 2;
     int x,y;
@@ -38,26 +49,20 @@ void spawn_rand_field(int fields[DIMENSION][DIMENSION]) {
     *freeFields[rand() % free] = nmbr;
 }
 
-void m_down (int fields[DIMENSION][DIMENSION]) {
-    int x,y;
 
-    for (y = 0; y < DIMENSION-1; y++) {
-        for (x = 0; x < DIMENSION; x++) {
-            if (fields[x][y+1] == fields[x][y]) {
-                fields[x][y] = fields[x][y]*2;
-                fields[x][y+1] = 0;
-            }
-        }
-    }
-}
-
+/* MOVE */
+void m_down (int fields[DIMENSION][DIMENSION]) {}
 void m_up (int fields[DIMENSION][DIMENSION]) {}
-
 void m_left (int fields[DIMENSION][DIMENSION]) {}
-
 void m_right (int fields[DIMENSION][DIMENSION]) {}
 
 
+/*
+ print_fields(int [][])
+ Parameter: fields
+ 
+ Gibt die Zahlen der Felder aus
+ */
 void print_fields(int fields[DIMENSION][DIMENSION]) {
     int a,b;
     for (a = 0; a < DIMENSION; a++) {
@@ -69,6 +74,15 @@ void print_fields(int fields[DIMENSION][DIMENSION]) {
     printf("\n");
 }
 
+
+/*
+ updateSurface(SDL_Renderer*)
+ Parameter: renderer
+ 
+ Aktualisiert die Anzeige-Oberfläche
+  - Erstellt einzelne Quadrate
+  - Zeigt die Quadrate an
+ */
 void updateSurface(SDL_Renderer* renderer){
 	int a,b;
 	int x=0;
@@ -97,11 +111,30 @@ void updateSurface(SDL_Renderer* renderer){
 	SDL_RenderPresent(renderer);
 }
 
+/*
+ print_FieldsOnScreen(int [][])
+ Parameter: fields
+ */
 void print_FieldsOnScreen(int fields[DIMENSION][DIMENSION]) {}
 
+/*
+ quit()
+ 
+ Beendet das Programm
+ */
 void quit() {
     SDL_Quit();
     exit(EXIT_SUCCESS);
+}
+
+void init_SDL() {
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+        fprintf( stderr, "Could not initialise SDL: %s\n", SDL_GetError() );
+        exit(-1);
+    }
+    else {
+        printf("SDL_Init was successful!\n");
+    }
 }
 
 int main(int argc, char* args[]) {
@@ -123,13 +156,7 @@ int main(int argc, char* args[]) {
     SDL_Rect blit_position;
      */
 
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        fprintf( stderr, "Could not initialise SDL: %s\n", SDL_GetError() );
-        exit(-1);
-    }
-    else {
-        printf("SDL_Init was successful!\n");
-    }
+    init_SDL();
 
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
