@@ -3,11 +3,17 @@ LDFLAGS= -I/Library/Frameworks/SDL2.framework/Headers -F/Library/Frameworks -fra
 
 all: run
 
-2048.exe: src/main.c
-	$(CC) $(CFLAGS) -o 2048.exe src/main.c $(LDFLAGS)
+2048.exe: obj/main.o obj/move.o
+	$(CC) -o 2048.exe obj/main.o obj/move.o $(LDFLAGS)
+
+obj/main.o: src/main.c
+	$(CC) -c -o obj/main.o src/main.c
+
+obj/move.o: src/move.c
+	$(CC) -c -o obj/move.o src/move.c
 
 testSDL.exe: src/testSDL.c
-	$(CC) $(CFLAGS) -o testSDL.exe src/testSDL.c $(LDFLAGS)
+	$(CC) -o testSDL.exe src/testSDL.c $(LDFLAGS)
 
 run: 2048.exe
 	./2048.exe

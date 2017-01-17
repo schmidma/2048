@@ -6,7 +6,6 @@
 //  Copyright © 2017 Maximilian Schmidt. All rights reserved.
 //
 
-
 /* INCLUDE */
 
 #include <stdio.h>
@@ -15,26 +14,24 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-/* MAKRO */
-
-#define DIMENSION 4
+#include "move.h"
 
 /*
- spawn_rand_field(int [][])
- Parameter: fields
- 
+ spawn_rand_field(int[], int)
+ Parameter: fields, dimension
+
  Fügt an einem zufällig gewähltem freien Feld eine "2" (nmbr) ein.
  */
-void spawn_rand_field(int fields[DIMENSION][DIMENSION]) {
+void spawn_rand_field(int fields[], int dimension) {
     int nmbr = 2;
     int x,y;
     int free = 0;
-    int *freeFields[DIMENSION*DIMENSION];
+    int *freeFields[dimension*dimension];
 
-    for (x = 0; x < DIMENSION; x++) {
-        for (y = 0; y < DIMENSION; y++) {
-            if (fields[x][y] == 0) {
-                freeFields[free] = &(fields[x][y]);
+    for (x = 0; x < dimension; x++) {
+        for (y = 0; y < dimension; y++) {
+            if (fields[dimension*y+x] == 0) {
+                freeFields[free] = &(fields[dimension*y+x]);
                 free++;
             }
         }
@@ -50,25 +47,18 @@ void spawn_rand_field(int fields[DIMENSION][DIMENSION]) {
 }
 
 
-/* MOVE */
-void m_down (int fields[DIMENSION][DIMENSION]) {}
-void m_up (int fields[DIMENSION][DIMENSION]) {}
-void m_left (int fields[DIMENSION][DIMENSION]) {}
-void m_right (int fields[DIMENSION][DIMENSION]) {}
-
-
 /*
- print_fields(int [][])
- Parameter: fields
- 
+ print_fields(int[], int)
+ Parameter: fields, dimension
+
  Gibt die Zahlen der Felder aus
  */
-void print_fields(int fields[DIMENSION][DIMENSION]) {
+void print_fields(int fields[], int dimension) {
     int a,b;
-    for (a = 0; a < DIMENSION; a++) {
+    for (a = 0; a < dimension; a++) {
         printf("\n");
-        for (b = 0; b < DIMENSION; b++) {
-            printf("%d\t", fields[a][b]);
+        for (b = 0; b < dimension; b++) {
+            printf("%d\t", fields[dimension*b+a]);
         }
     }
     printf("\n");
@@ -76,35 +66,35 @@ void print_fields(int fields[DIMENSION][DIMENSION]) {
 
 
 /*
- updateSurface(SDL_Renderer*)
- Parameter: renderer
- 
+ updateSurface(SDL_Renderer*, int)
+ Parameter: renderer, dimension
+
  Aktualisiert die Anzeige-Oberfläche
   - Erstellt einzelne Quadrate
   - Zeigt die Quadrate an
  */
-void updateSurface(SDL_Renderer* renderer){
+void updateSurface(SDL_Renderer* renderer, int dimension){
 	int a,b;
 	int x=0;
 	int y=0;
-    
-	for(a=0; a<DIMENSION; a++){
-		
+
+	for(a=0; a<dimension; a++){
+
         x=a*100+20;
-        
-		for(b=0; b<DIMENSION; b++){
+
+		for(b=0; b<dimension; b++){
 			y=b*100+20;
-            
+
 			SDL_Rect rect;
 			rect.x=x;
 			rect.y=y;
 			rect.w=100;
 			rect.h=100;
-            
+
 			int c=b*20+a*10;
-            
+
 			SDL_SetRenderDrawColor(renderer, c, c, c, SDL_ALPHA_OPAQUE);
-            
+
 			SDL_RenderFillRect(renderer, &rect);
 		}
 	}
@@ -112,14 +102,14 @@ void updateSurface(SDL_Renderer* renderer){
 }
 
 /*
- print_FieldsOnScreen(int [][])
- Parameter: fields
+ print_FieldsOnScreen(int[], int)
+ Parameter: fields, dimension
  */
-void print_FieldsOnScreen(int fields[DIMENSION][DIMENSION]) {}
+void print_FieldsOnScreen(int fields[], int dimension) {}
 
 /*
  quit()
- 
+
  Beendet das Programm
  */
 void quit() {
@@ -142,12 +132,19 @@ int main(int argc, char* args[]) {
     /* INITIALIZE VARIABLES */
     int round = 0;
     int points = 0;
-    int fields[DIMENSION][DIMENSION] = {0};
+    int dimension = 4;
     int run = 1;
-    
+    int *fields;
+
+    fields = (int*)calloc(dimension*dimension, sizeof(int));
+    if (fields == NULL) {
+        printf("Fehler bei calloc....\n");
+        return EXIT_FAILURE;
+    }
+
     /* SDL VARIABLES */
     SDL_Event event;
-    
+
     /* TEXT VARIABLES
     SDL_Surface* wsurface;
     SDL_Surface* text_surface;
@@ -161,25 +158,25 @@ int main(int argc, char* args[]) {
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
 
-    print_fields(fields);
-    
+    print_fields(fields, dimension);
+
     while (run) {
         while( SDL_PollEvent( &event ) ){
             switch( event.type ){
                 case SDL_KEYDOWN:
                     /* ON KEYPRESS */
-                    
+
                     switch( event.key.keysym.sym ){
                         case SDLK_LEFT:
                             /* LEFT */
-                            
-                            spawn_rand_field(fields);
-                            print_fields(fields);
-                            
+
+                            spawn_rand_field(fields, dimension);
+                            print_fields(fields, dimension);
+
                             break;
                         case SDLK_RIGHT:
                             /* RIGHT */
-                            
+
 							/* TEXT
                             srand((unsigned int)time(NULL));
 							wsurface = SDL_GetWindowSurface(screen);
@@ -192,15 +189,15 @@ int main(int argc, char* args[]) {
 							SDL_FreeSurface(text_surface);
 							SDL_UpdateWindowSurface(screen);
                              */
-                            
+
                             break;
                         case SDLK_UP:
                             /* UP */
-                            
+
                             break;
                         case SDLK_DOWN:
                             /* DOWN */
-                            
+
                             break;
                         case SDLK_ESCAPE:
                             quit();
@@ -209,7 +206,7 @@ int main(int argc, char* args[]) {
                             break;
                     }
                     break;
-                    
+
                 case SDL_QUIT:
                     quit();
                     break;
@@ -217,7 +214,7 @@ int main(int argc, char* args[]) {
                     break;
             }
         }
-        updateSurface(renderer);
+        updateSurface(renderer, dimension);
     }
 
     SDL_Quit();
