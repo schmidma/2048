@@ -111,6 +111,11 @@ int main(int argc, char* args[]) {
 	SDL_Rect* surface[DIMENSION][DIMENSION];
     int run = 1;
     SDL_Event event;
+	SDL_Surface* wsurface;
+	SDL_Surface* text_surface;
+	SDL_Rect blit_position;
+	SDL_Color tcolor = {.r = 105, .g = 200, .b = 30, .a = 200};
+	TTF_Font* tfont;
 
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf( stderr, "Could not initialise SDL: %s\n", SDL_GetError() );
@@ -145,6 +150,16 @@ int main(int argc, char* args[]) {
 							SDL_RenderPresent(renderer);
                             break;
                         case SDLK_RIGHT:
+							/*srand((unsigned int)time(NULL));
+							wsurface = SDL_GetWindowSurface(screen);
+							text_surface = TTF_RenderText_Solid(TTF_STYLE_BOLD, "TEST", tcolor);
+							blit_position.x = rand()%500;
+							blit_position.y = rand()%300;
+							blit_position.w = 100;
+							blit_position.h = 100;
+							SDL_BlitSurface(text_surface, NULL, wsurface, blit_position);
+							SDL_FreeSurface(text_surface);
+							SDL_UpdateWindowSurface(screen);*/
                             //RIGHT
                             break;
                         case SDLK_UP:
