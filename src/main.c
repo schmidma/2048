@@ -24,14 +24,14 @@
  */
 void spawn_rand_field(int fields[], int dimension) {
     int nmbr = 2;
-    int x,y;
+    int x, y;
     int free = 0;
     int *freeFields[dimension*dimension];
 
     for (x = 0; x < dimension; x++) {
         for (y = 0; y < dimension; y++) {
             if (fields[dimension*y+x] == 0) {
-                freeFields[free] = &(fields[dimension*y+x]);
+                freeFields[free] = &(fields[dimension*y + x]);
                 free++;
             }
         }
@@ -54,11 +54,11 @@ void spawn_rand_field(int fields[], int dimension) {
  Gibt die Zahlen der Felder aus
  */
 void print_fields(int fields[], int dimension) {
-    int a,b;
-    for (a = 0; a < dimension; a++) {
+    int x, y;
+    for (y = 0; y < dimension; y++) {
         printf("\n");
-        for (b = 0; b < dimension; b++) {
-            printf("%d\t", fields[dimension*b+a]);
+        for (x = 0; x < dimension; x++) {
+            printf("%d\t", fields[y*dimension + x]);
         }
     }
     printf("\n");
@@ -73,27 +73,33 @@ void print_fields(int fields[], int dimension) {
   - Erstellt einzelne Quadrate
   - Zeigt die Quadrate an
  */
-void updateSurface(SDL_Renderer* renderer, int dimension){
-	int a,b;
-	int x=0;
-	int y=0;
+void updateSurface(SDL_Renderer* renderer, int fields[], int dimension){
+	int x, y;
+	int color = 255;
+	int coord_x = 0;
+	int coord_y = 0;
 
-	for(a=0; a<dimension; a++){
+	for(x = 0; x < dimension; x++){
 
-        x=a*105+25;
+        coord_x = x*105+25;
 
-		for(b=0; b<dimension; b++){
-			y=b*105+25;
+		for(y = 0; y < dimension; y++){
+			coord_y = y*105+25;
 
 			SDL_Rect rect;
-			rect.x=x;
-			rect.y=y;
-			rect.w=100;
-			rect.h=100;
+			rect.x = coord_x;
+			rect.y = coord_y;
+			rect.w = 100;
+			rect.h = 100;
 
-			int c=b*20+a*10;
+			if (fields[y*dimension + x] != 0) {
+				color = fields[y*dimension + x] * 10;
+			}
+			else {
+				color = 255;
+			}
 
-			SDL_SetRenderDrawColor(renderer, c, c, c, SDL_ALPHA_OPAQUE);
+			SDL_SetRenderDrawColor(renderer, color, color, color, SDL_ALPHA_OPAQUE);
 
 			SDL_RenderFillRect(renderer, &rect);
 		}
@@ -173,6 +179,8 @@ int main(int argc, char* args[]) {
 	createSurface(renderer, dimension);
 
     print_fields(fields, dimension);
+	spawn_rand_field(fields, dimension);
+	print_fields(fields, dimension);
 
     while (run) {
         lastTick = SDL_GetTicks();
@@ -184,19 +192,31 @@ int main(int argc, char* args[]) {
                     switch( event.key.keysym.sym ){
                         case SDLK_LEFT:
                             /* LEFT */
-
+							if (m_left(fields, dimension)) {
+								spawn_rand_field(fields, dimension);
+								print_fields(fields, dimension);
+							}
                             break;
                         case SDLK_RIGHT:
                             /* RIGHT */
-
+							if (m_right(fields, dimension)) {
+								spawn_rand_field(fields, dimension);
+								print_fields(fields, dimension);
+							}
                             break;
                         case SDLK_UP:
                             /* UP */
-
+							if (m_up(fields, dimension)) {
+								spawn_rand_field(fields, dimension);
+								print_fields(fields, dimension);
+							}
                             break;
                         case SDLK_DOWN:
                             /* DOWN */
-
+							if (m_down(fields, dimension)) {
+								spawn_rand_field(fields, dimension);
+								print_fields(fields, dimension);
+							}
                             break;
                         case SDLK_ESCAPE:
                             quit();
@@ -212,16 +232,14 @@ int main(int argc, char* args[]) {
                 default:
                     break;
             }
-            updateSurface(renderer, dimension);
-
-
+            updateSurface(renderer, fields, dimension);
         }
+
         currentTick = SDL_GetTicks();
 
         sleep = milliPeriod - (currentTick - lastTick);
         if (sleep < 0) sleep = 0;
         SDL_Delay(sleep);
-        printf("%d\n", sleep);
     }
 
     SDL_Quit();
