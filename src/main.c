@@ -73,7 +73,7 @@ void print_fields(int fields[], int dimension) {
   - Erstellt einzelne Quadrate
   - Zeigt die Quadrate an
  */
-void updateSurface(SDL_Window* window, SDL_Renderer* renderer, int fields[], int dimension){
+void updateSurface(SDL_Window* window, int fields[], int dimension){
 	int x, y;
 	int color = 255;
 	int coord_x = 0;
@@ -103,29 +103,31 @@ void updateSurface(SDL_Window* window, SDL_Renderer* renderer, int fields[], int
 				color = 255;
 			}
 
-			SDL_SetRenderDrawColor(renderer, color, color, color, SDL_ALPHA_OPAQUE);
-
-			SDL_RenderFillRect(renderer, &rect);
+			SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, color, color, color));
 			if(font==NULL){
 				printf("Font nicht gefunden");
 			}
 			else{
-				TTF_RenderText_Solid(font, "HALLO", textColor);
+				text = TTF_RenderText_Solid(font, "HALLO", textColor);
 				SDL_BlitSurface(text,NULL,surface,&rect);
-				TTF_CloseFont(font);
 			}
 		}
 	}
-	SDL_RenderPresent(renderer);
+	SDL_UpdateWindowSurface(window);
+	TTF_CloseFont(font);
 }
 
-void createSurface(SDL_Renderer* renderer, int dimension) {
-    SDL_SetRenderDrawColor(renderer, 255,255,255, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(renderer);
 
+const int FPS = 24;
+const int SCREENW = 640;
+const int SCREENH = 480;
+
+void createSurface(SDL_Window* window) {
+	
 	SDL_Rect box = {20,20,425,425};
-	SDL_SetRenderDrawColor(renderer, 0,0,0, SDL_ALPHA_OPAQUE);
-	SDL_RenderDrawRect(renderer, &box);
+	SDL_Surface* surface = SDL_GetWindowSurface(window);
+	SDL_FillRect(surface, &box, SDL_MapRGB(surface->format, 0, 0, 0));
+	SDL_UpdateWindowSurface(window);
 
 }
 
@@ -166,9 +168,6 @@ void init_TTF() {
     }
 }
 
-const int FPS = 24;
-const int SCREENW = 640;
-const int SCREENH = 480;
 
 int main(int argc, char* args[]) {
 
@@ -198,9 +197,8 @@ int main(int argc, char* args[]) {
 	init_TTF();
 
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREENW, SCREENH, SDL_WINDOW_OPENGL);
-	SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
 
-	createSurface(renderer, dimension);
+	createSurface(screen);
 
     print_fields(fields, dimension);
 	spawn_rand_field(fields, dimension);
@@ -256,7 +254,7 @@ int main(int argc, char* args[]) {
                 default:
                     break;
             }
-            updateSurface(screen, renderer, fields, dimension);
+            updateSurface(screen, fields, dimension);
         }
 
         currentTick = SDL_GetTicks();
