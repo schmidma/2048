@@ -1,6 +1,6 @@
 CC=gcc
-INCLUDE_MAC= -I/Library/Frameworks/SDL2.framework/Headers -F/Library/Frameworks 
-FRAMEWORK_MAC= -framework SDL2
+INCLUDE_MAC= -I/Library/Frameworks/SDL2.framework/Headers -I/Library/Frameworks/SDL2_ttf.framework/Headers -F/Library/Frameworks 
+FRAMEWORK_MAC= -framework SDL2 -framework SDL2_ttf
 FLAGS_WIN= -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lSDL2_ttf
 
 2048: src/main.c src/move.c
