@@ -108,8 +108,12 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 				printf("Font nicht gefunden");
 			}
 			else{
-				text = TTF_RenderText_Solid(font, "HALLO", textColor);
-				SDL_BlitSurface(text,NULL,surface,&rect);
+				if(fields[y*dimension+x]!=0){
+					char number [20];
+					itoa(fields[y*dimension+x],number,10);
+					text = TTF_RenderText_Solid(font, &number, textColor);
+					SDL_BlitSurface(text,NULL,surface,&rect);
+				}
 			}
 		}
 	}
