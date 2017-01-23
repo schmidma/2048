@@ -177,6 +177,7 @@ int main(int argc, char* args[]) {
     int dimension = 4;
     int run = 1;
     int *fields;
+    int moved = 0;
 
     Uint32 lastTick;
     Uint32 currentTick;
@@ -205,6 +206,7 @@ int main(int argc, char* args[]) {
 	print_fields(fields, dimension);
 
     while (run) {
+        moved = 0;
         lastTick = SDL_GetTicks();
 
         while( SDL_PollEvent( &event ) ){
@@ -214,28 +216,28 @@ int main(int argc, char* args[]) {
                     switch( event.key.keysym.sym ){
                         case SDLK_LEFT:
                             /* LEFT */
-							if (m_left(fields, dimension)) {
+							if ((moved = m_left(fields, dimension))) {
 								spawn_rand_field(fields, dimension);
 								print_fields(fields, dimension);
-							}							
+							}
                             break;
                         case SDLK_RIGHT:
                             /* RIGHT */
-							if (m_right(fields, dimension)) {
+							if ((moved = m_right(fields, dimension))) {
 								spawn_rand_field(fields, dimension);
 								print_fields(fields, dimension);
 							}
                             break;
                         case SDLK_UP:
                             /* UP */
-							if (m_up(fields, dimension)) {
+							if ((moved = m_up(fields, dimension))) {
 								spawn_rand_field(fields, dimension);
 								print_fields(fields, dimension);
 							}
                             break;
                         case SDLK_DOWN:
                             /* DOWN */
-							if (m_down(fields, dimension)) {
+							if ((moved = m_down(fields, dimension))) {
 								spawn_rand_field(fields, dimension);
 								print_fields(fields, dimension);
 							}
@@ -254,7 +256,13 @@ int main(int argc, char* args[]) {
                 default:
                     break;
             }
+<<<<<<< HEAD
             updateSurface(screen, fields, dimension);
+=======
+        }
+        if (moved) {
+            updateSurface(screen, renderer, fields, dimension);
+>>>>>>> bf597931bcdc6fe4b3e24ad8d9e24f9ff39df340
         }
 
         currentTick = SDL_GetTicks();
