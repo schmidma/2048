@@ -73,15 +73,15 @@ void print_fields(int fields[], int dimension) {
   - Erstellt einzelne Quadrate
   - Zeigt die Quadrate an
  */
-void updateSurface(SDL_Window* screen, SDL_Renderer* renderer, int fields[], int dimension){
+void updateSurface(SDL_Window* window, SDL_Renderer* renderer, int fields[], int dimension){
 	int x, y;
 	int color = 255;
 	int coord_x = 0;
 	int coord_y = 0;
-	SDL_Surface* surface = SDL_GetWindowSurface(screen);
+	SDL_Surface* surface = SDL_GetWindowSurface(window);
 	SDL_Surface* text;
 	SDL_Color textColor = {100,200,100};
-	TTF_Font* font = TTF_OpenFont("roboto.ttf",28);
+	TTF_Font* font = TTF_OpenFont("src/OpenSans-Regular.ttf",20);
 
 	for(x = 0; x < dimension; x++){
 
@@ -91,7 +91,6 @@ void updateSurface(SDL_Window* screen, SDL_Renderer* renderer, int fields[], int
 			coord_y = y*105+25;
 
 			SDL_Rect rect;
-			SDL_Rect* dstrect=&rect;
 			rect.x = coord_x;
 			rect.y = coord_y;
 			rect.w = 100;
@@ -107,8 +106,14 @@ void updateSurface(SDL_Window* screen, SDL_Renderer* renderer, int fields[], int
 			SDL_SetRenderDrawColor(renderer, color, color, color, SDL_ALPHA_OPAQUE);
 
 			SDL_RenderFillRect(renderer, &rect);
-			TTF_RenderText_Solid(font, "HALLO", textColor);
-			SDL_BlitSurface(text,NULL,surface,dstrect);
+			if(font==NULL){
+				printf("Font nicht gefunden");
+			}
+			else{
+				TTF_RenderText_Solid(font, "HALLO", textColor);
+				SDL_BlitSurface(text,NULL,surface,&rect);
+				TTF_CloseFont(font);
+			}
 		}
 	}
 	SDL_RenderPresent(renderer);
@@ -136,6 +141,7 @@ void print_FieldsOnScreen(int fields[], int dimension) {}
  Beendet das Programm
  */
 void quit() {
+	TTF_Quit();
     SDL_Quit();
     exit(EXIT_SUCCESS);
 }
