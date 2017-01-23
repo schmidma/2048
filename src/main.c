@@ -129,11 +129,6 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 	TTF_CloseFont(font);
 }
 
-
-const int FPS = 24;
-const int SCREENW = 640;
-const int SCREENH = 480;
-
 void createSurface(SDL_Window* window) {
 	SDL_Rect box = {20,20,425,425};
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
@@ -218,6 +213,10 @@ int main(int argc, char* args[]) {
     int *fields;
     int moved = 0;
 	int highscore;
+
+	const int FPS = 24;
+	const int SCREENW = 640;
+	const int SCREENH = 480;
 
     Uint32 lastTick;
     Uint32 currentTick;
