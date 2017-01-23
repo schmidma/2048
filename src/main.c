@@ -81,7 +81,7 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
 	SDL_Surface* text;
 	SDL_Color textColor = {100,200,100};
-	TTF_Font* font = TTF_OpenFont("src/OpenSans-Regular.ttf",20);
+	TTF_Font* font = TTF_OpenFont("src/OpenSans-Bold.ttf",36);
 
 	for(x = 0; x < dimension; x++){
 
@@ -112,7 +112,8 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 					char number [20];
 					itoa(fields[y*dimension+x],number,10);
 					text = TTF_RenderText_Solid(font, &number, textColor);
-					SDL_BlitSurface(text,NULL,surface,&rect);
+					SDL_Rect dst = {rect.x+((rect.w+text->w)/2-text->w),rect.y+((rect.h+text->h)/2)-text->h,0,0};
+					SDL_BlitSurface(text,NULL,surface,&dst);
 				}
 			}
 		}
