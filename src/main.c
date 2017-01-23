@@ -73,11 +73,15 @@ void print_fields(int fields[], int dimension) {
   - Erstellt einzelne Quadrate
   - Zeigt die Quadrate an
  */
-void updateSurface(SDL_Renderer* renderer, int fields[], int dimension){
+void updateSurface(SDL_Window* window, SDL_Renderer* renderer, int fields[], int dimension){
 	int x, y;
 	int color = 255;
 	int coord_x = 0;
 	int coord_y = 0;
+	SDL_Surface* surface = SDL_GetWindowSurface(window);
+	SDL_Surface* text;
+	SDL_Color textColor = {100,200,100};
+	TTF_Font* font = TTF_OpenFont("src/OpenSans-Regular.ttf",20);
 
 	for(x = 0; x < dimension; x++){
 
@@ -102,6 +106,14 @@ void updateSurface(SDL_Renderer* renderer, int fields[], int dimension){
 			SDL_SetRenderDrawColor(renderer, color, color, color, SDL_ALPHA_OPAQUE);
 
 			SDL_RenderFillRect(renderer, &rect);
+			if(font==NULL){
+				printf("Font nicht gefunden");
+			}
+			else{
+				TTF_RenderText_Solid(font, "HALLO", textColor);
+				SDL_BlitSurface(text,NULL,surface,&rect);
+				TTF_CloseFont(font);
+			}
 		}
 	}
 	SDL_RenderPresent(renderer);
@@ -129,6 +141,7 @@ void print_FieldsOnScreen(int fields[], int dimension) {}
  Beendet das Programm
  */
 void quit() {
+	TTF_Quit();
     SDL_Quit();
     exit(EXIT_SUCCESS);
 }
@@ -140,6 +153,16 @@ void init_SDL() {
     }
     else {
         printf("SDL_Init was successful!\n");
+    }
+}
+
+void init_TTF() {
+    if(TTF_Init() == -1) {
+        fprintf( stderr, "Could not initialise TTF: %s\n", SDL_GetError() );
+        exit(-1);
+    }
+    else {
+        printf("TTF_Init was successful!\n");
     }
 }
 
@@ -173,6 +196,7 @@ int main(int argc, char* args[]) {
     SDL_Event event;
 
     init_SDL();
+	init_TTF();
 
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREENW, SCREENH, SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
@@ -236,8 +260,7 @@ int main(int argc, char* args[]) {
             }
         }
         if (moved) {
-            printf("CALL updateSurface()\n");
-            updateSurface(renderer, fields, dimension);
+            updateSurface(screen, renderer, fields, dimension);
         }
 
         currentTick = SDL_GetTicks();
