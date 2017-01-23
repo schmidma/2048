@@ -168,6 +168,24 @@ void init_TTF() {
     }
 }
 
+int openHighscore() {
+	FILE *highscoreFile;
+	highscoreFile = fopen("highscore.txt", "r");
+	int highscore;
+
+	if (highscoreFile == NULL) {
+		printf("Konnte Highscore-Datei nicht oeffnen!\n");
+		fclose(highscoreFile);
+		return 0;
+	}
+	else {
+		fscanf(highscoreFile, "%d", &highscore);
+		printf("Eingelesener Highscore: %d\n", highscore);
+		fclose(highscoreFile);
+		return highscore;
+	}
+}
+
 
 int main(int argc, char* args[]) {
 
@@ -178,6 +196,8 @@ int main(int argc, char* args[]) {
     int run = 1;
     int *fields;
     int moved = 0;
+	int highscore;
+	highscore = openHighscore();
 
     Uint32 lastTick;
     Uint32 currentTick;
