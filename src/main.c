@@ -83,6 +83,8 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 	SDL_Color textColor = {100,200,100};
 	TTF_Font* font = TTF_OpenFont("src/OpenSans-Bold.ttf",36);
 	TTF_Font* font_high = TTF_OpenFont("src/OpenSans-Regular.ttf",30);
+	char *number_str;
+	number_str = (char *)malloc(20*sizeof(char));
 
 	for(x = 0; x < dimension; x++){
 
@@ -110,13 +112,12 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 			}
 			else{
 				if(fields[y*dimension+x]!=0){
-					char number [20];
-					itoa(fields[y*dimension+x],number,10);
+					sprintf(number_str, "%d", fields[y*dimension + x]);
 					if(fields[y*dimension+x]<10000){
-						text = TTF_RenderText_Solid(font, &number, textColor);
+						text = TTF_RenderText_Solid(font, number_str, textColor);
 					}
 					else{
-						text = TTF_RenderText_Solid(font_high, &number, textColor); //Anpassung der Schriftart bzw Größe bei 5-Stelligen Werten
+						text = TTF_RenderText_Solid(font_high, number_str, textColor); //Anpassung der Schriftart bzw Größe bei 5-Stelligen Werten
 					}
 					SDL_Rect dst = {rect.x+((rect.w+text->w)/2-text->w),rect.y+((rect.h+text->h)/2)-text->h,0,0};
 					SDL_BlitSurface(text,NULL,surface,&dst);
@@ -246,6 +247,7 @@ int main(int argc, char* args[]) {
 	createSurface(screen);
 
 	spawn_rand_field(fields, dimension);
+	updateSurface(screen, fields, dimension);
 
     while (run) {
         moved = 0;
@@ -294,7 +296,6 @@ int main(int argc, char* args[]) {
                 default:
                     break;
             }
-            updateSurface(screen, fields, dimension);
         }
         if (moved) {
             updateSurface(screen, fields, dimension);
