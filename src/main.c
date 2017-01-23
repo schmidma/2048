@@ -256,13 +256,10 @@ int main(int argc, char* args[]) {
                 default:
                     break;
             }
-<<<<<<< HEAD
             updateSurface(screen, fields, dimension);
-=======
         }
         if (moved) {
-            updateSurface(screen, renderer, fields, dimension);
->>>>>>> bf597931bcdc6fe4b3e24ad8d9e24f9ff39df340
+            updateSurface(screen, fields, dimension);
         }
 
         currentTick = SDL_GetTicks();
