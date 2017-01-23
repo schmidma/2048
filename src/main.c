@@ -73,16 +73,36 @@ void print_fields(int fields[], int dimension) {
   - Erstellt einzelne Quadrate
   - Zeigt die Quadrate an
  */
-void updateSurface(SDL_Window* window, int fields[], int dimension){
+void updateSurface(SDL_Window* window, int fields[], int dimension, int points, int highscore){
+	
 	int x, y;
 	int color = 255;
 	int coord_x = 0;
 	int coord_y = 0;
+
+	if (points > highscore) {
+		highscore = points;
+	}
+
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
 	SDL_Surface* text;
 	SDL_Color textColor = {100,200,100};
+
 	TTF_Font* font = TTF_OpenFont("src/OpenSans-Bold.ttf",36);
 	TTF_Font* font_high = TTF_OpenFont("src/OpenSans-Regular.ttf",30);
+	SDL_Rect dst = { 0,0,0,0 };
+	SDL_Rect blank_highscore = { 470, 50, 140, 100 };
+	SDL_Rect blank_points = { 470, 150, 140, 100 };
+
+	if (font == NULL) {
+		fprintf(stderr, "Font src/OpenSans-Bold.ttf not found!\n");
+		exit(EXIT_FAILURE);
+	}
+	if (font_high == NULL) {
+		fprintf(stderr, "Font src/OpenSans-Regular.ttf not found!\n");
+		exit(EXIT_FAILURE);
+	}
+
 	char *number_str;
 	number_str = (char *)malloc(20*sizeof(char));
 
@@ -107,24 +127,44 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 			}
 
 			SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, color, color, color));
-			if(font==NULL){
-				fprintf(stderr, "Font nicht gefunden");
-			}
-			else{
-				if(fields[y*dimension+x]!=0){
-					sprintf(number_str, "%d", fields[y*dimension + x]);
-					if(fields[y*dimension+x]<10000){
-						text = TTF_RenderText_Solid(font, number_str, textColor);
-					}
-					else{
-						text = TTF_RenderText_Solid(font_high, number_str, textColor); //Anpassung der Schriftart bzw Größe bei 5-Stelligen Werten
-					}
-					SDL_Rect dst = {rect.x+((rect.w+text->w)/2-text->w),rect.y+((rect.h+text->h)/2)-text->h,0,0};
-					SDL_BlitSurface(text,NULL,surface,&dst);
+
+			if (fields[y*dimension+x] != 0){
+				sprintf(number_str, "%d", fields[y*dimension + x]);
+
+				if (fields[y*dimension+x] < 10000) {
+					text = TTF_RenderText_Solid(font, number_str, textColor);
 				}
+				else{
+					text = TTF_RenderText_Solid(font_high, number_str, textColor); /* Anpassung der Schriftart bzw Größe bei 5-Stelligen Werten */
+				}
+				dst.x = rect.x + ((rect.w + text->w) / 2 - text->w);
+				dst.y = rect.y + ((rect.h + text->h) / 2) - text->h;
+
+				SDL_BlitSurface(text, NULL, surface, &dst);
 			}
 		}
 	}
+
+
+	SDL_FillRect(surface, &blank_highscore, SDL_MapRGB(surface->format, 0, 0, 0));
+	SDL_FillRect(surface, &blank_points, SDL_MapRGB(surface->format, 0, 0, 0));
+	SDL_BlitSurface(TTF_RenderText_Solid(font_high, "Highscore:", textColor), NULL, surface, &blank_highscore);
+	SDL_BlitSurface(TTF_RenderText_Solid(font_high, "Points:", textColor), NULL, surface, &blank_points);
+
+	sprintf(number_str, "%d", highscore);
+	text = TTF_RenderText_Solid(font, number_str, textColor);
+	dst.x = 500;
+	dst.y = 100;
+
+	SDL_BlitSurface(text, NULL, surface, &dst);
+
+	sprintf(number_str, "%d", points);
+	text = TTF_RenderText_Solid(font, number_str, textColor);
+	dst.x = 500;
+	dst.y = 200;
+
+	SDL_BlitSurface(text, NULL, surface, &dst);
+
 	SDL_UpdateWindowSurface(window);
 	TTF_CloseFont(font);
 }
@@ -185,7 +225,7 @@ void quit(int points, int highscore) {
 void init_SDL() {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf(stderr, "Could not initialise SDL: %s\n", SDL_GetError());
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
     else {
         printf("SDL_Init was successful!\n");
@@ -195,7 +235,7 @@ void init_SDL() {
 void init_TTF() {
     if(TTF_Init() == -1) {
         fprintf(stderr, "Could not initialise TTF: %s\n", SDL_GetError());
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
     else {
         printf("TTF_Init was successful!\n");
@@ -235,8 +275,10 @@ int main(int argc, char* args[]) {
 
 	printf("\n\n------------------------------------\nWelcome to 2048!\n------------------------------------\n\n");
 	printf("INITIALIZE...\n");
+
     init_SDL();
 	init_TTF();
+
 	printf("\n");
 
 	highscore = openHighscore();
@@ -246,7 +288,7 @@ int main(int argc, char* args[]) {
 	createSurface(screen);
 
 	spawn_rand_field(fields, dimension);
-	updateSurface(screen, fields, dimension);
+	updateSurface(screen, fields, dimension, points, highscore);
 
     while (run) {
         moved = 0;
@@ -297,7 +339,7 @@ int main(int argc, char* args[]) {
             }
         }
         if (moved) {
-            updateSurface(screen, fields, dimension);
+            updateSurface(screen, fields, dimension, points, highscore);
         }
 
         currentTick = SDL_GetTicks();
