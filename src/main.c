@@ -16,6 +16,14 @@
 
 #include "move.h"
 
+clock_t starttime;
+
+int gametime(){
+	int t = ((long)clock()-(long)starttime)/1000;
+	return t;
+}
+
+
 /*
  spawn_rand_field(int[], int)
  Parameter: fields, dimension
@@ -84,6 +92,8 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 	TTF_Font* font = TTF_OpenFont("src/OpenSans-Bold.ttf",36);
 	TTF_Font* font_high = TTF_OpenFont("src/OpenSans-Regular.ttf",30);
 	char *number_str;
+	char *time_str;
+	time_str = (char *)malloc(10*sizeof(char));
 	number_str = (char *)malloc(20*sizeof(char));
 
 	for(x = 0; x < dimension; x++){
@@ -125,6 +135,12 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 			}
 		}
 	}
+	sprintf(time_str,"%d",gametime());
+	text = TTF_RenderText_Solid(font_high, time_str, textColor);
+	SDL_Rect timepos = {SCREENW-text->w,50,0,0};
+	SDL_Rect cleantimepos = {SCREENW-100,0,100,100};
+	SDL_FillRect(surface, &cleantimepos, SDL_MapRGB(surface->format, 0, 0, 0));
+	SDL_BlitSurface(text,NULL,surface,&timepos);
 	SDL_UpdateWindowSurface(window);
 	TTF_CloseFont(font);
 }
