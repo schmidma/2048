@@ -105,7 +105,7 @@ void updateSurface(SDL_Window* window, int fields[], int dimension){
 
 			SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, color, color, color));
 			if(font==NULL){
-				printf("Font nicht gefunden");
+				fprintf(stderr, "Font nicht gefunden");
 			}
 			else{
 				if(fields[y*dimension+x]!=0){
@@ -127,34 +127,61 @@ const int SCREENW = 640;
 const int SCREENH = 480;
 
 void createSurface(SDL_Window* window) {
-	
 	SDL_Rect box = {20,20,425,425};
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
-	SDL_FillRect(surface, &box, SDL_MapRGB(surface->format, 0, 0, 0));
+	SDL_FillRect(surface, &box, SDL_MapRGB(surface->format, 255, 255, 255));
 	SDL_UpdateWindowSurface(window);
-
 }
 
-/*
- print_FieldsOnScreen(int[], int)
- Parameter: fields, dimension
- */
-void print_FieldsOnScreen(int fields[], int dimension) {}
+int openHighscore() {
+	FILE *highscoreFile;
+	highscoreFile = fopen("highscore.txt", "r");
+	int highscore;
+
+	if (highscoreFile == NULL) {
+		fprintf(stderr, "Cannot open highscore.txt!\n");
+		fclose(highscoreFile);
+		return 0;
+	}
+	else {
+		printf("Read Highscore...\n");
+		fscanf(highscoreFile, "%d", &highscore);
+		printf("highscore: %d\n", highscore);
+		fclose(highscoreFile);
+		return highscore;
+	}
+}
+
+void writeHighscore(int points) {
+	FILE *highscoreFile;
+	highscoreFile = fopen("highscore.txt", "w");
+
+	fprintf(highscoreFile, "%d", points);
+	fclose(highscoreFile);
+}
 
 /*
  quit()
 
  Beendet das Programm
  */
-void quit() {
+void quit(int points, int highscore) {
+	printf("\nEXIT Game...\n");
+	printf("Check for new Highscore.\n");
+	if (points > highscore) {
+		printf("Write new Highscore(%d).\n", points);
+		writeHighscore(points);
+	}
+
 	TTF_Quit();
     SDL_Quit();
+	printf("\nQUIT\n");
     exit(EXIT_SUCCESS);
 }
 
 void init_SDL() {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        fprintf( stderr, "Could not initialise SDL: %s\n", SDL_GetError() );
+        fprintf(stderr, "Could not initialise SDL: %s\n", SDL_GetError());
         exit(-1);
     }
     else {
@@ -164,30 +191,12 @@ void init_SDL() {
 
 void init_TTF() {
     if(TTF_Init() == -1) {
-        fprintf( stderr, "Could not initialise TTF: %s\n", SDL_GetError() );
+        fprintf(stderr, "Could not initialise TTF: %s\n", SDL_GetError());
         exit(-1);
     }
     else {
         printf("TTF_Init was successful!\n");
     }
-}
-
-int openHighscore() {
-	FILE *highscoreFile;
-	highscoreFile = fopen("highscore.txt", "r");
-	int highscore;
-
-	if (highscoreFile == NULL) {
-		printf("Konnte Highscore-Datei nicht oeffnen!\n");
-		fclose(highscoreFile);
-		return 0;
-	}
-	else {
-		fscanf(highscoreFile, "%d", &highscore);
-		printf("Eingelesener Highscore: %d\n", highscore);
-		fclose(highscoreFile);
-		return highscore;
-	}
 }
 
 
@@ -201,7 +210,6 @@ int main(int argc, char* args[]) {
     int *fields;
     int moved = 0;
 	int highscore;
-	highscore = openHighscore();
 
     Uint32 lastTick;
     Uint32 currentTick;
@@ -211,23 +219,26 @@ int main(int argc, char* args[]) {
 
     fields = (int*)calloc(dimension*dimension, sizeof(int));
     if (fields == NULL) {
-        printf("Fehler bei calloc....\n");
+        fprintf(stderr, "Fehler bei calloc....\n");
         return EXIT_FAILURE;
     }
 
     /* SDL VARIABLES */
     SDL_Event event;
 
+	printf("\n\n------------------------------------\nWelcome to 2048!\n------------------------------------\n\n");
+	printf("INITIALIZE...\n");
     init_SDL();
 	init_TTF();
+	printf("\n");
+
+	highscore = openHighscore();
 
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREENW, SCREENH, SDL_WINDOW_OPENGL);
 
 	createSurface(screen);
 
-    print_fields(fields, dimension);
 	spawn_rand_field(fields, dimension);
-	print_fields(fields, dimension);
 
     while (run) {
         moved = 0;
@@ -240,34 +251,30 @@ int main(int argc, char* args[]) {
                     switch( event.key.keysym.sym ){
                         case SDLK_LEFT:
                             /* LEFT */
-							if ((moved = m_left(fields, dimension))) {
+							if ((moved = m_left(fields, dimension, &points))) {
 								spawn_rand_field(fields, dimension);
-								print_fields(fields, dimension);
 							}
                             break;
                         case SDLK_RIGHT:
                             /* RIGHT */
-							if ((moved = m_right(fields, dimension))) {
+							if ((moved = m_right(fields, dimension, &points))) {
 								spawn_rand_field(fields, dimension);
-								print_fields(fields, dimension);
 							}
                             break;
                         case SDLK_UP:
                             /* UP */
-							if ((moved = m_up(fields, dimension))) {
+							if ((moved = m_up(fields, dimension, &points))) {
 								spawn_rand_field(fields, dimension);
-								print_fields(fields, dimension);
 							}
                             break;
                         case SDLK_DOWN:
                             /* DOWN */
-							if ((moved = m_down(fields, dimension))) {
+							if ((moved = m_down(fields, dimension, &points))) {
 								spawn_rand_field(fields, dimension);
-								print_fields(fields, dimension);
 							}
                             break;
                         case SDLK_ESCAPE:
-                            quit();
+                            quit(points, highscore);
                             break;
                         default:
                             break;
@@ -275,7 +282,7 @@ int main(int argc, char* args[]) {
                     break;
 
                 case SDL_QUIT:
-                    quit();
+                    quit(points, highscore);
                     break;
                 default:
                     break;

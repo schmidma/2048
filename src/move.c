@@ -2,7 +2,7 @@
 #include "move.h"
 
 /* MOVE */
-int m_up (int fields[], int dimension) {
+int m_up (int fields[], int dimension, int *points) {
     //printf("MOVE_M_UP\n");
 	int x, y, y2;
 	int moved = 0;
@@ -18,6 +18,7 @@ int m_up (int fields[], int dimension) {
 							fields[y*dimension + x] = fields[y*dimension + x] * 2;
 							fields[y2*dimension + x] = 0;
 							moved = 1;
+							*points += fields[y*dimension + x];
 						}
 						break;
 					}
@@ -45,7 +46,7 @@ int m_up (int fields[], int dimension) {
 	return moved;
 }
 
-int m_down(int fields[], int dimension) {
+int m_down(int fields[], int dimension, int *points) {
 	//printf("MOVE_M_DOWN\n");
 	int x, y, y2;
 	int moved = 0;
@@ -58,6 +59,7 @@ int m_down(int fields[], int dimension) {
 							fields[y*dimension + x] = fields[y*dimension + x] * 2;
 							fields[y2*dimension + x] = 0;
 							moved = 1;
+							*points += fields[y*dimension + x];
 						}
 						break;
 					}
@@ -82,7 +84,7 @@ int m_down(int fields[], int dimension) {
 	return moved;
 }
 
-int m_left(int fields[], int dimension) {
+int m_left(int fields[], int dimension, int *points) {
 	//printf("MOVE_M_LEFT\n");
 	int x, y, x2;
 	int moved = 0;
@@ -95,6 +97,7 @@ int m_left(int fields[], int dimension) {
 							fields[y*dimension + x] = fields[y*dimension + x] * 2;
 							fields[y*dimension + x2] = 0;
 							moved = 1;
+							*points += fields[y*dimension + x];
 						}
 						break;
 					}
@@ -119,7 +122,7 @@ int m_left(int fields[], int dimension) {
 	return moved;
 }
 
-int m_right(int fields[], int dimension) {
+int m_right(int fields[], int dimension, int *points) {
 	//printf("MOVE_M_RIGHT\n");
 	int x, y, x2;
 	int moved = 0;
@@ -132,6 +135,7 @@ int m_right(int fields[], int dimension) {
 							fields[y*dimension + x] = fields[y*dimension + x] * 2;
 							fields[y*dimension + x2] = 0;
 							moved = 1;
+							*points += fields[y*dimension + x];
 						}
 						break;
 					}
