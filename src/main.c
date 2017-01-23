@@ -73,11 +73,15 @@ void print_fields(int fields[], int dimension) {
   - Erstellt einzelne Quadrate
   - Zeigt die Quadrate an
  */
-void updateSurface(SDL_Renderer* renderer, int fields[], int dimension){
+void updateSurface(SDL_Window* screen, SDL_Renderer* renderer, int fields[], int dimension){
 	int x, y;
 	int color = 255;
 	int coord_x = 0;
 	int coord_y = 0;
+	SDL_Surface* surface = SDL_GetWindowSurface(screen);
+	SDL_Surface* text;
+	SDL_Color textColor = {100,200,100};
+	TTF_Font* font = TTF_OpenFont("roboto.ttf",28);
 
 	for(x = 0; x < dimension; x++){
 
@@ -87,6 +91,7 @@ void updateSurface(SDL_Renderer* renderer, int fields[], int dimension){
 			coord_y = y*105+25;
 
 			SDL_Rect rect;
+			SDL_Rect* dstrect=&rect;
 			rect.x = coord_x;
 			rect.y = coord_y;
 			rect.w = 100;
@@ -102,6 +107,8 @@ void updateSurface(SDL_Renderer* renderer, int fields[], int dimension){
 			SDL_SetRenderDrawColor(renderer, color, color, color, SDL_ALPHA_OPAQUE);
 
 			SDL_RenderFillRect(renderer, &rect);
+			TTF_RenderText_Solid(font, "HALLO", textColor);
+			SDL_BlitSurface(text,NULL,surface,dstrect);
 		}
 	}
 	SDL_RenderPresent(renderer);
@@ -143,6 +150,16 @@ void init_SDL() {
     }
 }
 
+void init_TTF() {
+    if(TTF_Init() == -1) {
+        fprintf( stderr, "Could not initialise TTF: %s\n", SDL_GetError() );
+        exit(-1);
+    }
+    else {
+        printf("TTF_Init was successful!\n");
+    }
+}
+
 const int FPS = 24;
 const int SCREENW = 640;
 const int SCREENH = 480;
@@ -172,6 +189,7 @@ int main(int argc, char* args[]) {
     SDL_Event event;
 
     init_SDL();
+	init_TTF();
 
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREENW, SCREENH, SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
@@ -195,7 +213,7 @@ int main(int argc, char* args[]) {
 							if (m_left(fields, dimension)) {
 								spawn_rand_field(fields, dimension);
 								print_fields(fields, dimension);
-							}
+							}							
                             break;
                         case SDLK_RIGHT:
                             /* RIGHT */
@@ -232,7 +250,7 @@ int main(int argc, char* args[]) {
                 default:
                     break;
             }
-            updateSurface(renderer, fields, dimension);
+            updateSurface(screen, renderer, fields, dimension);
         }
 
         currentTick = SDL_GetTicks();
