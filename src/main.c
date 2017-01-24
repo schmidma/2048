@@ -145,8 +145,6 @@ int main(int argc, char* args[]) {
 
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenw, screenh, SDL_WINDOW_OPENGL);
 
-	//createSurface(screen);
-
 	spawn_rand_field(fields, dimension);
 	updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));
 
