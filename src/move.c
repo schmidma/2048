@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "move.h"
 
 /* MOVE */
 int m_up (int fields[], int dimension, int *points) {
