@@ -20,13 +20,6 @@
 #include "../include/update.h"
 
 
-
-int gametime(clock_t starttime){
-	int t = ((long)clock()-(long)starttime)/1000;
-	return t;
-}
-
-
 /*
  spawn_rand_field(int[], int)
  Parameter: fields, dimension
@@ -75,6 +68,11 @@ void print_fields(int fields[], int dimension) {
     printf("\n");
 }
 
+int getGametime(clock_t starttime) {
+	int t = ((long)clock() - (long)starttime) / 1000;
+	return t;
+}
+
 /*
  quit()
 
@@ -105,7 +103,7 @@ int main(int argc, char* args[]) {
     int *fields;
     int moved = 0;
 	int highscore;
-	clock_t starttime;
+	clock_t starttime = clock();
 
 	const int FPS = 24;
 	const int SCREENW = 640;
@@ -147,7 +145,7 @@ int main(int argc, char* args[]) {
 	createSurface(screen);
 
 	spawn_rand_field(fields, dimension);
-	updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold);
+	updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));
 
     while (run) {
         moved = 0;
@@ -197,10 +195,9 @@ int main(int argc, char* args[]) {
                     break;
             }
         }
-        if (moved) {
-            updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold);
-        }
-
+        
+        updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));
+        
         currentTick = SDL_GetTicks();
 
         sleep = milliPeriod - (currentTick - lastTick);

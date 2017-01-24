@@ -5,15 +5,16 @@
 #include <SDL2/SDL_ttf.h>
 
 
-void updateStats(SDL_Surface* window_surface, TTF_Font* font, int highscore, int points) {
+void updateStats(SDL_Surface* window_surface, TTF_Font* font, int highscore, int points, int gameTime) {
 	char *str_cpy;
 	str_cpy = (char *)malloc(20 * sizeof(char));
 
-	SDL_Rect stats_rect = { 470, 50, 140, 200 };
-	SDL_Rect highscore_rect = { 470, 50, 140, 50 };
-	SDL_Rect points_rect = { 470, 150, 140, 50 };
-	SDL_Rect time_rect;
+	SDL_Rect stats_rect = { 470, 10, 170, 250 };
+	SDL_Rect highscore_rect = { 470, 100, 140, 50 };
+	SDL_Rect points_rect = { 470, 170, 140, 50 };
+	SDL_Rect time_rect = { 470, 10, 140, 40 };
 	SDL_Color textColor = { 100, 200, 100 };
+	SDL_Surface* text_surface;
 
 	/* Clear Stats */
 	SDL_FillRect(window_surface, &stats_rect, SDL_MapRGB(window_surface->format, 0, 0, 0));
@@ -21,23 +22,32 @@ void updateStats(SDL_Surface* window_surface, TTF_Font* font, int highscore, int
 
 	SDL_BlitSurface(TTF_RenderText_Solid(font, "Highscore:", textColor), NULL, window_surface, &highscore_rect);
 	SDL_BlitSurface(TTF_RenderText_Solid(font, "Points:", textColor), NULL, window_surface, &points_rect);
+	SDL_BlitSurface(TTF_RenderText_Solid(font, "Time:", textColor), NULL, window_surface, &time_rect);
 
 	sprintf(str_cpy, "%d", highscore);
-	highscore_rect.x += 10;
-	highscore_rect.y += 50;
-	SDL_BlitSurface(TTF_RenderText_Solid(font, str_cpy, textColor), NULL, window_surface, &highscore_rect);
+	text_surface = TTF_RenderText_Solid(font, str_cpy, textColor);
+	highscore_rect.x = window_surface->w - text_surface->w - 30;
+	highscore_rect.y += 35;
+	SDL_BlitSurface(text_surface, NULL, window_surface, &highscore_rect);
 
 	sprintf(str_cpy, "%d", points);
-	points_rect.x += 10;
-	points_rect.y += 50;
-	SDL_BlitSurface(TTF_RenderText_Solid(font, str_cpy, textColor), NULL, window_surface, &points_rect);
+	text_surface = TTF_RenderText_Solid(font, str_cpy, textColor);
+	points_rect.x = window_surface->w - text_surface->w - 30;
+	points_rect.y += 35;
+	SDL_BlitSurface(text_surface, NULL, window_surface, &points_rect);
+
+	sprintf(str_cpy, "%.2d:%.2d", gameTime/60, gameTime%60);
+	text_surface = TTF_RenderText_Solid(font, str_cpy, textColor);
+	time_rect.x = window_surface->w-text_surface->w-10;
+	time_rect.y += 0;
+	SDL_BlitSurface(text_surface, NULL, window_surface, &time_rect);
 }
 
 /*
 updateSurface()
 //TODO!!
 */
-void updateSurface(SDL_Window* window, int fields[], int dimension, int points, int highscore, TTF_Font* font_regular, TTF_Font* font_bold) {
+void updateSurface(SDL_Window* window, int fields[], int dimension, int points, int highscore, TTF_Font* font_regular, TTF_Font* font_bold, int gameTime) {
 
 	int x, y;
 	int color = 255;
@@ -97,7 +107,7 @@ void updateSurface(SDL_Window* window, int fields[], int dimension, int points, 
 		}
 	}
 
-	updateStats(window_surface, font_regular, highscore, points);
+	updateStats(window_surface, font_regular, highscore, points, gameTime);
 
 	SDL_UpdateWindowSurface(window);
 }
