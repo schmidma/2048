@@ -106,8 +106,8 @@ int main(int argc, char* args[]) {
 	clock_t starttime = clock();
 
 	const int FPS = 24;
-	const int SCREENW = 640;
-	const int SCREENH = 480;
+	const int SCREENW = 105*dimension+220;
+	const int SCREENH = 105*dimension+60;
 
     Uint32 lastTick;
     Uint32 currentTick;
@@ -142,7 +142,7 @@ int main(int argc, char* args[]) {
 
     SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREENW, SCREENH, SDL_WINDOW_OPENGL);
 
-	createSurface(screen);
+	//createSurface(screen);
 
 	spawn_rand_field(fields, dimension);
 	updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));

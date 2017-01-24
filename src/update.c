@@ -9,10 +9,10 @@ void updateStats(SDL_Surface* window_surface, TTF_Font* font, int highscore, int
 	char *str_cpy;
 	str_cpy = (char *)malloc(20 * sizeof(char));
 
-	SDL_Rect stats_rect = { 470, 10, 170, 250 };
-	SDL_Rect highscore_rect = { 470, 100, 140, 50 };
-	SDL_Rect points_rect = { 470, 170, 140, 50 };
-	SDL_Rect time_rect = { 470, 10, 140, 40 };
+	SDL_Rect stats_rect = { window_surface->w-170, 10, 170, 250 };
+	SDL_Rect highscore_rect = { stats_rect.x, 100, 140, 50 };
+	SDL_Rect points_rect = { stats_rect.x, 170, 140, 50 };
+	SDL_Rect time_rect = { stats_rect.x, 10, 140, 40 };
 	SDL_Color textColor = { 100, 200, 100 };
 	SDL_Surface* text_surface;
 
