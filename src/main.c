@@ -18,6 +18,7 @@
 #include "../include/highscore.h"
 #include "../include/init.h"
 #include "../include/update.h"
+#include "../include/startup.h"
 
 
 /*
@@ -92,8 +93,12 @@ void quit(int points, int highscore) {
     exit(EXIT_SUCCESS);
 }
 
-
 int main(int argc, char* args[]) {
+	printf("\n\n------------------------------------\nWelcome to 2048!\n------------------------------------\n\n");
+	printf("INITIALIZE...\n");
+
+	init_SDL();
+	init_TTF();
 
     /* INITIALIZE VARIABLES */
     int round = 0;
@@ -105,14 +110,18 @@ int main(int argc, char* args[]) {
 	int highscore;
 	clock_t starttime = clock();
 
-	const int FPS = 24;
-	const int SCREENW = 105*dimension+220;
-	const int SCREENH = 105*dimension+60;
+	printf("\nSTARTUP!\n");
+	dimension = startupWindow();
+	printf("dimension: %d\n", dimension);
+
+	int fps = 24;
+	int screenw = 105*dimension+220;
+	int screenh = 105*dimension+60;
 
     Uint32 lastTick;
     Uint32 currentTick;
     int sleep;
-    double period = 1.0 / (double)FPS * 1000;
+    double period = 1.0 / (double)fps * 1000;
     int milliPeriod = (int)period;
 
     fields = (int*)calloc(dimension*dimension, sizeof(int));
@@ -127,12 +136,6 @@ int main(int argc, char* args[]) {
 	TTF_Font* font_regular;
 	TTF_Font* font_bold;
 
-	printf("\n\n------------------------------------\nWelcome to 2048!\n------------------------------------\n\n");
-	printf("INITIALIZE...\n");
-
-    init_SDL();
-	init_TTF();
-
 	font_regular = loadFont("ttf/OpenSans-Regular.ttf", 30);
 	font_bold = loadFont("ttf/OpenSans-Bold.ttf", 36);
 	
@@ -140,7 +143,7 @@ int main(int argc, char* args[]) {
 
 	highscore = openHighscore();
 
-    SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREENW, SCREENH, SDL_WINDOW_OPENGL);
+    SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenw, screenh, SDL_WINDOW_OPENGL);
 
 	//createSurface(screen);
 
