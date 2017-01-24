@@ -5,15 +5,39 @@
 #include <SDL2/SDL_ttf.h>
 
 
-/*
-updateSurface(SDL_Renderer*, int)
-Parameter: renderer, dimension
+void updateStats(SDL_Surface* window_surface, TTF_Font* font, int highscore, int points) {
+	char *str_cpy;
+	str_cpy = (char *)malloc(20 * sizeof(char));
 
-Aktualisiert die Anzeige-Oberfläche
-- Erstellt einzelne Quadrate
-- Zeigt die Quadrate an
+	SDL_Rect stats_rect = { 470, 50, 140, 200 };
+	SDL_Rect highscore_rect = { 470, 50, 140, 50 };
+	SDL_Rect points_rect = { 470, 150, 140, 50 };
+	SDL_Rect time_rect;
+	SDL_Color textColor = { 100, 200, 100 };
+
+	/* Clear Stats */
+	SDL_FillRect(window_surface, &stats_rect, SDL_MapRGB(window_surface->format, 0, 0, 0));
+
+
+	SDL_BlitSurface(TTF_RenderText_Solid(font, "Highscore:", textColor), NULL, window_surface, &highscore_rect);
+	SDL_BlitSurface(TTF_RenderText_Solid(font, "Points:", textColor), NULL, window_surface, &points_rect);
+
+	sprintf(str_cpy, "%d", highscore);
+	highscore_rect.x += 10;
+	highscore_rect.y += 50;
+	SDL_BlitSurface(TTF_RenderText_Solid(font, str_cpy, textColor), NULL, window_surface, &highscore_rect);
+
+	sprintf(str_cpy, "%d", points);
+	points_rect.x += 10;
+	points_rect.y += 50;
+	SDL_BlitSurface(TTF_RenderText_Solid(font, str_cpy, textColor), NULL, window_surface, &points_rect);
+}
+
+/*
+updateSurface()
+//TODO!!
 */
-void updateSurface(SDL_Window* window, int fields[], int dimension, int points, int highscore) {
+void updateSurface(SDL_Window* window, int fields[], int dimension, int points, int highscore, TTF_Font* font_regular, TTF_Font* font_bold) {
 
 	int x, y;
 	int color = 255;
@@ -24,28 +48,14 @@ void updateSurface(SDL_Window* window, int fields[], int dimension, int points, 
 		highscore = points;
 	}
 
-	SDL_Surface* surface = SDL_GetWindowSurface(window);
-	SDL_Surface* text;
-	SDL_Color textColor = { 100,200,100 };
+	SDL_Surface* window_surface = SDL_GetWindowSurface(window);
+	SDL_Surface* text_surface;
+	SDL_Color textColor = { 100, 200, 100 };
 
-	TTF_Font* font = TTF_OpenFont("ttf/OpenSans-Bold.ttf", 36);
-	TTF_Font* font_high = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 30);
-	SDL_Rect dst = { 0,0,0,0 };
-	SDL_Rect blank_highscore = { 470, 50, 140, 100 };
-	SDL_Rect blank_points = { 470, 150, 140, 100 };
-
-	if (font == NULL) {
-		fprintf(stderr, "Font ttf/OpenSans-Bold.ttf not found!\n");
-		exit(EXIT_FAILURE);
-	}
-	if (font_high == NULL) {
-		fprintf(stderr, "Font ttf/OpenSans-Regular.ttf not found!\n");
-		exit(EXIT_FAILURE);
-	}
+	SDL_Rect field_rect;
+	SDL_Rect text_rect = { 0,0,0,0 };
 
 	char *number_str;
-	char *time_str;
-	time_str = (char *)malloc(10 * sizeof(char));
 	number_str = (char *)malloc(20 * sizeof(char));
 
 	for (x = 0; x < dimension; x++) {
@@ -55,11 +65,10 @@ void updateSurface(SDL_Window* window, int fields[], int dimension, int points, 
 		for (y = 0; y < dimension; y++) {
 			coord_y = y * 105 + 25;
 
-			SDL_Rect rect;
-			rect.x = coord_x;
-			rect.y = coord_y;
-			rect.w = 100;
-			rect.h = 100;
+			field_rect.x = coord_x;
+			field_rect.y = coord_y;
+			field_rect.w = 100;
+			field_rect.h = 100;
 
 			if (fields[y*dimension + x] != 0) {
 				color = fields[y*dimension + x] * 10;
@@ -68,45 +77,27 @@ void updateSurface(SDL_Window* window, int fields[], int dimension, int points, 
 				color = 255;
 			}
 
-			SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, color, color, color));
+			SDL_FillRect(window_surface, &field_rect, SDL_MapRGB(window_surface->format, color, color, color));
 
 			if (fields[y*dimension + x] != 0) {
 				sprintf(number_str, "%d", fields[y*dimension + x]);
 
 				if (fields[y*dimension + x] < 10000) {
-					text = TTF_RenderText_Solid(font, number_str, textColor);
+					text_surface = TTF_RenderText_Solid(font_bold, number_str, textColor);
 				}
 				else {
-					text = TTF_RenderText_Solid(font_high, number_str, textColor); /* Anpassung der Schriftart bzw Größe bei 5-Stelligen Werten */
+					text_surface = TTF_RenderText_Solid(font_regular, number_str, textColor); /* Anpassung der Schriftart bzw Größe bei 5-Stelligen Werten */
 				}
-				dst.x = rect.x + ((rect.w + text->w) / 2 - text->w);
-				dst.y = rect.y + ((rect.h + text->h) / 2) - text->h;
 
-				SDL_BlitSurface(text, NULL, surface, &dst);
+				text_rect.x = field_rect.x + ((field_rect.w + text_surface->w) / 2 - text_surface->w);
+				text_rect.y = field_rect.y + ((field_rect.h + text_surface->h) / 2) - text_surface->h;
+
+				SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
 			}
 		}
 	}
 
-
-	SDL_FillRect(surface, &blank_highscore, SDL_MapRGB(surface->format, 0, 0, 0));
-	SDL_FillRect(surface, &blank_points, SDL_MapRGB(surface->format, 0, 0, 0));
-	SDL_BlitSurface(TTF_RenderText_Solid(font_high, "Highscore:", textColor), NULL, surface, &blank_highscore);
-	SDL_BlitSurface(TTF_RenderText_Solid(font_high, "Points:", textColor), NULL, surface, &blank_points);
-
-	sprintf(number_str, "%d", highscore);
-	text = TTF_RenderText_Solid(font, number_str, textColor);
-	dst.x = 500;
-	dst.y = 100;
-
-	SDL_BlitSurface(text, NULL, surface, &dst);
-
-	sprintf(number_str, "%d", points);
-	text = TTF_RenderText_Solid(font, number_str, textColor);
-	dst.x = 500;
-	dst.y = 200;
-
-	SDL_BlitSurface(text, NULL, surface, &dst);
+	updateStats(window_surface, font_regular, highscore, points);
 
 	SDL_UpdateWindowSurface(window);
-	TTF_CloseFont(font);
 }

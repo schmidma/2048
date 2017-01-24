@@ -126,12 +126,18 @@ int main(int argc, char* args[]) {
     /* SDL VARIABLES */
     SDL_Event event;
 
+	TTF_Font* font_regular;
+	TTF_Font* font_bold;
+
 	printf("\n\n------------------------------------\nWelcome to 2048!\n------------------------------------\n\n");
 	printf("INITIALIZE...\n");
 
     init_SDL();
 	init_TTF();
 
+	font_regular = loadFont("ttf/OpenSans-Regular.ttf", 30);
+	font_bold = loadFont("ttf/OpenSans-Bold.ttf", 36);
+	
 	printf("\n");
 
 	highscore = openHighscore();
@@ -141,7 +147,7 @@ int main(int argc, char* args[]) {
 	createSurface(screen);
 
 	spawn_rand_field(fields, dimension);
-	updateSurface(screen, fields, dimension, points, highscore);
+	updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold);
 
     while (run) {
         moved = 0;
@@ -192,7 +198,7 @@ int main(int argc, char* args[]) {
             }
         }
         if (moved) {
-            updateSurface(screen, fields, dimension, points, highscore);
+            updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold);
         }
 
         currentTick = SDL_GetTicks();

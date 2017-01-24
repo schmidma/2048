@@ -26,6 +26,14 @@ void init_TTF() {
 	}
 }
 
+TTF_Font* loadFont(char* ttf, int size) {
+	TTF_Font* font = TTF_OpenFont(ttf, size);
+	
+	if (font == NULL) {
+		fprintf(stderr, "Font %s not found!\n", ttf);
+		exit(EXIT_FAILURE);
+	}
+}
 
 void createSurface(SDL_Window* window) {
 	SDL_Rect box = { 20,20,425,425 };
