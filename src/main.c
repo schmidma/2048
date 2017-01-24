@@ -108,12 +108,12 @@ int main(int argc, char* args[]) {
     int *fields;
     int moved = 0;
 	int highscore;
-	clock_t starttime = clock();
 
 	printf("\nSTARTUP!\n");
 	dimension = startupWindow();
 	printf("dimension: %d\n", dimension);
 
+	clock_t starttime = clock();
 	int fps = 24;
 	int screenw = 105*dimension+220;
 	int screenh = 105*dimension+60;

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
@@ -44,9 +43,13 @@ int startupWindow() {
 					dimension = 8;
 					run = 0;
 					break;
+				case SDLK_ESCAPE:
+					printf("EXIT!\n");
+					exit(EXIT_SUCCESS);
 				}
 				break;
 			case SDL_QUIT:
+				printf("EXIT!\n");
 				exit(EXIT_SUCCESS);
 			}
 		}
