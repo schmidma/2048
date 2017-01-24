@@ -3,8 +3,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "../include/init.h"
+
 int startupWindow() {
-	SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 200, 200, SDL_WINDOW_OPENGL);
+	SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 400, 400, SDL_WINDOW_OPENGL);
 	int run = 1;
 	Uint32 lastTick;
 	Uint32 currentTick;
@@ -15,6 +17,21 @@ int startupWindow() {
 	int dimension;
 
 	SDL_Event event;
+
+	TTF_Font* font_regular;
+	font_regular = loadFont("ttf/OpenSans-Regular.ttf", 30);
+
+	SDL_Rect text_rect = { 0, 0, 0, 0 };
+	SDL_Surface* text_surface;
+	SDL_Surface* window_surface = SDL_GetWindowSurface(screen);
+	SDL_Color textColor = { 255, 255, 255 };
+
+	text_surface = TTF_RenderText_Solid(font_regular, "Choose Dimension!", textColor);
+	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
+	text_rect.y = window_surface->h / 2 - text_surface->h / 2;
+	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
+
+	SDL_UpdateWindowSurface(screen);
 
 	while (run) {
 		lastTick = SDL_GetTicks();
