@@ -16,6 +16,14 @@
 
 #include "move.h"
 
+clock_t starttime;
+
+int gametime(){
+	int t = ((long)clock()-(long)starttime)/1000;
+	return t;
+}
+
+
 /*
  spawn_rand_field(int[], int)
  Parameter: fields, dimension
@@ -104,6 +112,8 @@ void updateSurface(SDL_Window* window, int fields[], int dimension, int points, 
 	}
 
 	char *number_str;
+	char *time_str;
+	time_str = (char *)malloc(10*sizeof(char));
 	number_str = (char *)malloc(20*sizeof(char));
 
 	for(x = 0; x < dimension; x++){
