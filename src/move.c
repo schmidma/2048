@@ -1,4 +1,22 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+int check_free(int fields[], int dimension){
+    int x, y;
+    int free = 0;
+
+    for (x = 0; x < dimension; x++) {
+        for (y = 0; y < dimension; y++) {
+            if (fields[dimension*y+x] == 0) {
+                free++;
+				break;
+            }
+        }
+    }
+
+	return free;
+}
+
 
 /* MOVE */
 int m_up (int fields[], int dimension, int *points) {
@@ -42,6 +60,9 @@ int m_up (int fields[], int dimension, int *points) {
 			}
 		}
 	}
+	if (moved==0){
+		if(check_free(fields,dimension)==0){exit(EXIT_SUCCESS);}
+	}
 	return moved;
 }
 
@@ -79,6 +100,9 @@ int m_down(int fields[], int dimension, int *points) {
 				}
 			}
 		}
+	}
+	if (moved==0){
+		if(check_free(fields,dimension)==0){exit(EXIT_SUCCESS);}
 	}
 	return moved;
 }
@@ -118,6 +142,9 @@ int m_left(int fields[], int dimension, int *points) {
 			}
 		}
 	}
+	if (moved==0){
+		if(check_free(fields,dimension)==0){exit(EXIT_SUCCESS);}
+	}
 	return moved;
 }
 
@@ -155,6 +182,9 @@ int m_right(int fields[], int dimension, int *points) {
 				}
 			}
 		}
+	}
+	if (moved==0){
+		if(check_free(fields,dimension)==0){exit(EXIT_SUCCESS);}
 	}
 	return moved;
 }

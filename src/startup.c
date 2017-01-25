@@ -6,7 +6,7 @@
 #include "../include/init.h"
 
 int startupWindow() {
-	SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 400, 400, SDL_WINDOW_OPENGL);
+	SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 600, 600, SDL_WINDOW_OPENGL);
 	int run = 1;
 	Uint32 lastTick;
 	Uint32 currentTick;
@@ -26,7 +26,7 @@ int startupWindow() {
 	SDL_Surface* window_surface = SDL_GetWindowSurface(screen);
 	SDL_Color textColor = { 255, 255, 255 };
 
-	text_surface = TTF_RenderText_Solid(font_regular, "Choose Dimension!", textColor);
+	text_surface = TTF_RenderText_Solid(font_regular, "Press a Number to choose Dimension!", textColor);
 	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
 	text_rect.y = window_surface->h / 2 - text_surface->h / 2;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
