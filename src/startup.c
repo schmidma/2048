@@ -19,7 +19,9 @@ int startupWindow() {
 	SDL_Event event;
 
 	TTF_Font* font_regular;
+	TTF_Font* font_small;
 	font_regular = loadFont("ttf/OpenSans-Regular.ttf", 30);
+	font_small = loadFont("ttf/OpenSans-Regular.ttf", 20);
 
 	SDL_Rect text_rect = { 0, 0, 0, 0 };
 	SDL_Surface* text_surface;
@@ -29,6 +31,16 @@ int startupWindow() {
 	text_surface = TTF_RenderText_Solid(font_regular, "Press a Number to choose Dimension!", textColor);
 	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
 	text_rect.y = window_surface->h / 2 - text_surface->h / 2;
+	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
+	
+	text_surface = TTF_RenderText_Solid(font_small, "1-8 for dimension AxA", textColor);
+	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
+	text_rect.y = window_surface->h / 2 - text_surface->h / 2 +30;
+	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
+	
+	text_surface = TTF_RenderText_Solid(font_small, "t for 5 min timebased game", textColor);
+	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
+	text_rect.y = window_surface->h / 2 - text_surface->h / 2 +60;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
 
 	SDL_UpdateWindowSurface(screen);
@@ -58,6 +70,10 @@ int startupWindow() {
 					break;
 				case SDLK_8:
 					dimension = 8;
+					run = 0;
+					break;
+				case SDLK_t:
+					dimension = 9;
 					run = 0;
 					break;
 				case SDLK_ESCAPE:

@@ -120,9 +120,17 @@ int main(int argc, char* args[]) {
     int *fields;
     int moved = 0;
 	int highscore;
+	int gametype;
 
 	printf("\nSTARTUP!\n");
-	dimension = startupWindow();
+	gametype = startupWindow();
+	if(gametype<=8){
+		dimension = gametype;
+	}
+	else{
+		printf("\nTimebased game(5min)\n");
+		dimension = 4;
+	}
 	printf("dimension: %d\n", dimension);
 
 	clock_t starttime = clock();
@@ -212,8 +220,13 @@ int main(int argc, char* args[]) {
             }
         }
         
-        if(run!=2){updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));}
+        if(run!=2 && gametype!=9){updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));}
         
+		if(gametype==9){
+			updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, 300-getGametime(starttime));
+			if (getGametime(starttime)>=300){run=restart(points,highscore,screen);}
+		}
+		
         currentTick = SDL_GetTicks();
 
         sleep = milliPeriod - (currentTick - lastTick);
