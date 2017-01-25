@@ -61,7 +61,7 @@ int m_up (int fields[], int dimension, int *points) {
 		}
 	}
 	if (moved==0){
-		if(check_free(fields,dimension)==0){exit(EXIT_SUCCESS);}
+		if(check_free(fields,dimension)==0){printf("\n press R for restart!\n");}
 	}
 	return moved;
 }
@@ -102,7 +102,7 @@ int m_down(int fields[], int dimension, int *points) {
 		}
 	}
 	if (moved==0){
-		if(check_free(fields,dimension)==0){exit(EXIT_SUCCESS);}
+		if(check_free(fields,dimension)==0){printf("\n press R for restart!\n");}
 	}
 	return moved;
 }
@@ -143,7 +143,7 @@ int m_left(int fields[], int dimension, int *points) {
 		}
 	}
 	if (moved==0){
-		if(check_free(fields,dimension)==0){exit(EXIT_SUCCESS);}
+		if(check_free(fields,dimension)==0){printf("\n press R for restart!\n");}
 	}
 	return moved;
 }
@@ -184,7 +184,7 @@ int m_right(int fields[], int dimension, int *points) {
 		}
 	}
 	if (moved==0){
-		if(check_free(fields,dimension)==0){exit(EXIT_SUCCESS);}
+		if(check_free(fields,dimension)==0){printf("\n press R for restart!\n");}
 	}
 	return moved;
 }
