@@ -93,7 +93,19 @@ void quit(int points, int highscore) {
     exit(EXIT_SUCCESS);
 }
 
+int restart(int points, int highscore, SDL_Window* window){
+	if (points > highscore){
+		writeHighscore(points);
+	}
+	SDL_DestroyWindow(window);
+	return 2;
+}
+
+
 int main(int argc, char* args[]) {
+	
+	int end =1;
+	while (end){
 	printf("\n\n------------------------------------\nWelcome to 2048!\n------------------------------------\n\n");
 	printf("INITIALIZE...\n");
 
@@ -184,6 +196,9 @@ int main(int argc, char* args[]) {
                         case SDLK_ESCAPE:
                             quit(points, highscore);
                             break;
+						case SDLK_r:
+							run=restart(points,highscore,screen);
+							break;
                         default:
                             break;
                     }
@@ -197,16 +212,21 @@ int main(int argc, char* args[]) {
             }
         }
         
-        updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));
+        if(run!=2){updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));}
         
         currentTick = SDL_GetTicks();
 
         sleep = milliPeriod - (currentTick - lastTick);
         if (sleep < 0) sleep = 0;
         SDL_Delay(sleep);
+		if(run==2){break;}
+		
     }
-
+	
+	TTF_Quit();
     SDL_Quit();
+	
+	}
 
     return 0;
 }
