@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 
 void init_SDL() {
@@ -22,6 +23,17 @@ void init_TTF() {
 	}
 	else {
 		printf("TTF_Init was successful!\n");
+	}
+}
+
+void init_IMG(){
+	int flags = IMG_INIT_PNG;
+	if(!(IMG_Init(flags) & flags)){
+		fprintf(stderr,"Could not initialise IMAGE: %s\n", IMG_GetError() );
+        exit(EXIT_FAILURE);
+    }
+	else{
+		printf("IMG_Init was successful!\n");
 	}
 }
 

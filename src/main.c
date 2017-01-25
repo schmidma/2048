@@ -13,6 +13,7 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 #include "../include/move.h"
 #include "../include/highscore.h"
@@ -89,6 +90,7 @@ void quit(int points, int highscore) {
 		writeHighscore(points);
 	}
 
+	IMG_Quit();
 	TTF_Quit();
     SDL_Quit();
 	printf("\nQUIT\n");
@@ -113,6 +115,7 @@ int main(int argc, char* args[]) {
 
 	init_SDL();
 	init_TTF();
+	init_IMG();
 
     /* INITIALIZE VARIABLES */
     int round = 0;
@@ -238,6 +241,7 @@ int main(int argc, char* args[]) {
 		
     }
 	
+	IMG_Quit();
 	TTF_Quit();
     SDL_Quit();
 	

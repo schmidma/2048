@@ -1,7 +1,7 @@
 CC=gcc
 INCLUDE_MAC= -I/Library/Frameworks/SDL2.framework/Headers -I/Library/Frameworks/SDL2_ttf.framework/Headers -F/Library/Frameworks 
 FRAMEWORK_MAC= -framework SDL2 -framework SDL2_ttf
-FLAGS_WIN= -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lSDL2_ttf
+FLAGS_WIN= -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lSDL2_ttf -lSDL2_image
 
 2048: src/main.c src/move.c src/highscore.c src/init.c src/update.c src/startup.c
 	$(CC) -c -o obj/main.o src/main.c $(INCLUDE_MAC)

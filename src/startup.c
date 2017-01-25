@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 #include "../include/init.h"
 
@@ -20,28 +21,41 @@ int startupWindow() {
 
 	TTF_Font* font_regular;
 	TTF_Font* font_small;
+	TTF_Font* font_copyright;
 	font_regular = loadFont("ttf/OpenSans-Regular.ttf", 30);
 	font_small = loadFont("ttf/OpenSans-Regular.ttf", 20);
+	font_copyright = loadFont("ttf/OpenSans-Regular.ttf", 15);
 
 	SDL_Rect text_rect = { 0, 0, 0, 0 };
 	SDL_Surface* text_surface;
 	SDL_Surface* window_surface = SDL_GetWindowSurface(screen);
 	SDL_Color textColor = { 255, 255, 255 };
 
-	text_surface = TTF_RenderText_Solid(font_regular, "Press a Number to choose Dimension!", textColor);
+	text_surface = TTF_RenderText_Blended(font_regular, "Press a Number to choose Dimension!", textColor);
 	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
 	text_rect.y = window_surface->h / 2 - text_surface->h / 2;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
 	
-	text_surface = TTF_RenderText_Solid(font_small, "4-8 for dimension AxA", textColor);
+	text_surface = TTF_RenderText_Blended(font_small, "4-8 for dimension AxA", textColor);
 	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
 	text_rect.y = window_surface->h / 2 - text_surface->h / 2 +30;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
 	
-	text_surface = TTF_RenderText_Solid(font_small, "t for 5 min timebased game", textColor);
+	text_surface = TTF_RenderText_Blended(font_small, "t for 5 min timebased game", textColor);
 	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
 	text_rect.y = window_surface->h / 2 - text_surface->h / 2 +60;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
+	
+	text_surface = TTF_RenderText_Blended(font_copyright, "Copyright © 2017 Maximilian Schmidt and Bjoern Bargstaedt. All rights reserved.", textColor);
+	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
+	text_rect.y = window_surface->h  - text_surface->h -10;
+	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
+	
+	SDL_Surface* header;
+	header=IMG_Load("img/header.png");
+	text_rect.x=0;
+	text_rect.y=0;
+	SDL_BlitSurface(header, NULL, window_surface, &text_rect);
 
 	SDL_UpdateWindowSurface(screen);
 
