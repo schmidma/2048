@@ -101,149 +101,152 @@ int restart(int points, int highscore, SDL_Window* window){
 	if (points > highscore){
 		writeHighscore(points);
 	}
-	SDL_DestroyWindow(window);
-	return 2;
+	return 0;
 }
 
 
 int main(int argc, char* args[]) {
 	
-	int end =1;
+	int end = 1;
+
 	while (end){
-	printf("\n\n------------------------------------\nWelcome to 2048!\n------------------------------------\n\n");
-	printf("INITIALIZE...\n");
+		printf("\n\n------------------------------------\nWelcome to 2048!\n------------------------------------\n\n");
+		printf("INITIALIZE...\n");
 
-	init_SDL();
-	init_TTF();
-	init_IMG();
+		init_SDL();
+		init_TTF();
+		init_IMG();
 
-    /* INITIALIZE VARIABLES */
-    int round = 0;
-    int points = 0;
-    int dimension = 4;
-    int run = 1;
-    int *fields;
-    int moved = 0;
-	int highscore;
-	int gametype;
+		/* INITIALIZE VARIABLES */
+		int round = 0;
+		int points = 0;
+		int dimension = 4;
+		int run = 1;
+		int *fields;
+		int moved = 0;
+		int highscore;
+		int gametype;
 
-	printf("\nSTARTUP!\n");
-	gametype = startupWindow();
-	if(gametype<=8){
-		dimension = gametype;
-	}
-	else{
-		printf("\nTimebased game(5min)\n");
-		dimension = 4;
-	}
-	printf("dimension: %d\n", dimension);
-
-	clock_t starttime = clock();
-	int fps = 24;
-	int screenw = 105*dimension+220;
-	int screenh = 105*dimension+60;
-
-    Uint32 lastTick;
-    Uint32 currentTick;
-    int sleep;
-    double period = 1.0 / (double)fps * 1000;
-    int milliPeriod = (int)period;
-
-    fields = (int*)calloc(dimension*dimension, sizeof(int));
-    if (fields == NULL) {
-        fprintf(stderr, "Fehler bei calloc....\n");
-        return EXIT_FAILURE;
-    }
-
-    /* SDL VARIABLES */
-    SDL_Event event;
-
-	TTF_Font* font_regular;
-	TTF_Font* font_bold;
-
-	font_regular = loadFont("ttf/OpenSans-Regular.ttf", 30);
-	font_bold = loadFont("ttf/OpenSans-Bold.ttf", 36);
-	
-	printf("\n");
-
-	highscore = openHighscore();
-
-    SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenw, screenh, SDL_WINDOW_OPENGL);
-
-	spawn_rand_field(fields, dimension);
-	updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));
-
-    while (run) {
-        moved = 0;
-        lastTick = SDL_GetTicks();
-
-        while( SDL_PollEvent( &event ) ){
-            switch( event.type ){
-                case SDL_KEYDOWN:
-                    /* ON KEYPRESS */
-                    switch( event.key.keysym.sym ){
-                        case SDLK_LEFT:
-                            /* LEFT */
-							if ((moved = m_left(fields, dimension, &points))) {
-								spawn_rand_field(fields, dimension);
-							}
-                            break;
-                        case SDLK_RIGHT:
-                            /* RIGHT */
-							if ((moved = m_right(fields, dimension, &points))) {
-								spawn_rand_field(fields, dimension);
-							}
-                            break;
-                        case SDLK_UP:
-                            /* UP */
-							if ((moved = m_up(fields, dimension, &points))) {
-								spawn_rand_field(fields, dimension);
-							}
-                            break;
-                        case SDLK_DOWN:
-                            /* DOWN */
-							if ((moved = m_down(fields, dimension, &points))) {
-								spawn_rand_field(fields, dimension);
-							}
-                            break;
-                        case SDLK_ESCAPE:
-                            quit(points, highscore);
-                            break;
-						case SDLK_r:
-							run=restart(points,highscore,screen);
-							break;
-                        default:
-                            break;
-                    }
-                    break;
-
-                case SDL_QUIT:
-                    quit(points, highscore);
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-        if(run!=2 && gametype!=9){updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));}
-        
-		if(gametype==9){
-			if(run!=2){updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, 300-getGametime(starttime));}
-			if (getGametime(starttime)>=300){run=restart(points,highscore,screen);}
+		printf("\nSTARTUP!\n");
+		gametype = startupWindow();
+		if(gametype<=8){
+			dimension = gametype;
 		}
-		
-        currentTick = SDL_GetTicks();
+		else{
+			printf("\nTimebased game(5min)\n");
+			dimension = 4;
+		}
+		printf("dimension: %d\n", dimension);
 
-        sleep = milliPeriod - (currentTick - lastTick);
-        if (sleep < 0) sleep = 0;
-        SDL_Delay(sleep);
-		if(run==2){break;}
-		
-    }
+		clock_t starttime = clock();
+		int fps = 24;
+		int screenw = 105*dimension+220;
+		int screenh = 105*dimension+60;
+
+		Uint32 lastTick;
+		Uint32 currentTick;
+		int sleep;
+		double period = 1.0 / (double)fps * 1000;
+		int milliPeriod = (int)period;
+
+		fields = (int*)calloc(dimension*dimension, sizeof(int));
+		if (fields == NULL) {
+			fprintf(stderr, "Fehler bei calloc....\n");
+			return EXIT_FAILURE;
+		}
+
+		/* SDL VARIABLES */
+		SDL_Event event;
+
+		TTF_Font* font_regular;
+		TTF_Font* font_bold;
+
+		font_regular = loadFont("ttf/OpenSans-Regular.ttf", 30);
+		font_bold = loadFont("ttf/OpenSans-Bold.ttf", 36);
 	
-	IMG_Quit();
-	TTF_Quit();
-    SDL_Quit();
+		printf("\n");
+
+		highscore = openHighscore();
+
+		SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenw, screenh, SDL_WINDOW_OPENGL);
+
+		spawn_rand_field(fields, dimension);
+		updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));
+
+		while (run) {
+			moved = 0;
+			lastTick = SDL_GetTicks();
+
+			while (SDL_PollEvent(&event)) {
+				switch (event.type) {
+				case SDL_KEYDOWN:
+					/* ON KEYPRESS */
+					switch (event.key.keysym.sym) {
+					case SDLK_LEFT:
+						/* LEFT */
+						if ((moved = m_left(fields, dimension, &points))) {
+							spawn_rand_field(fields, dimension);
+						}
+						break;
+					case SDLK_RIGHT:
+						/* RIGHT */
+						if ((moved = m_right(fields, dimension, &points))) {
+							spawn_rand_field(fields, dimension);
+						}
+						break;
+					case SDLK_UP:
+						/* UP */
+						if ((moved = m_up(fields, dimension, &points))) {
+							spawn_rand_field(fields, dimension);
+						}
+						break;
+					case SDLK_DOWN:
+						/* DOWN */
+						if ((moved = m_down(fields, dimension, &points))) {
+							spawn_rand_field(fields, dimension);
+						}
+						break;
+					case SDLK_ESCAPE:
+						quit(points, highscore);
+						break;
+					case SDLK_r:
+						run = restart(points, highscore, screen);
+						break;
+					default:
+						break;
+					}
+					break;
+
+				case SDL_QUIT:
+					quit(points, highscore);
+					break;
+				default:
+					break;
+				}
+			}
+
+			if (gametype == 9) {
+				updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, 300 - getGametime(starttime));
+				if (getGametime(starttime) >= 300) {
+					run = restart(points, highscore, screen);
+				}
+			}
+			else {
+				updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));
+			}
+
+			currentTick = SDL_GetTicks();
+
+			sleep = milliPeriod - (currentTick - lastTick);
+			if (sleep < 0) sleep = 0;
+			SDL_Delay(sleep);
+		}
+
+		SDL_DestroyWindow(screen);
+	
+		IMG_Quit();
+		TTF_Quit();
+		SDL_Quit();
 	
 	}
 
