@@ -19,24 +19,24 @@ void updateStats(SDL_Surface* window_surface, TTF_Font* font, int highscore, int
 	SDL_FillRect(window_surface, &stats_rect, SDL_MapRGB(window_surface->format, 0, 0, 0));
 
 
-	SDL_BlitSurface(TTF_RenderText_Solid(font, "Highscore:", textColor), NULL, window_surface, &highscore_rect);
-	SDL_BlitSurface(TTF_RenderText_Solid(font, "Points:", textColor), NULL, window_surface, &points_rect);
-	SDL_BlitSurface(TTF_RenderText_Solid(font, "Time:", textColor), NULL, window_surface, &time_rect);
+	SDL_BlitSurface(TTF_RenderUTF8_Blended(font, "Highscore:", textColor), NULL, window_surface, &highscore_rect);
+	SDL_BlitSurface(TTF_RenderUTF8_Blended(font, "Points:", textColor), NULL, window_surface, &points_rect);
+	SDL_BlitSurface(TTF_RenderUTF8_Blended(font, "Time:", textColor), NULL, window_surface, &time_rect);
 
 	sprintf(str_cpy, "%d", highscore);
-	text_surface = TTF_RenderText_Solid(font, str_cpy, textColor);
+	text_surface = TTF_RenderUTF8_Blended(font, str_cpy, textColor);
 	highscore_rect.x = window_surface->w - text_surface->w - 30;
 	highscore_rect.y += 35;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &highscore_rect);
 
 	sprintf(str_cpy, "%d", points);
-	text_surface = TTF_RenderText_Solid(font, str_cpy, textColor);
+	text_surface = TTF_RenderUTF8_Blended(font, str_cpy, textColor);
 	points_rect.x = window_surface->w - text_surface->w - 30;
 	points_rect.y += 35;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &points_rect);
 
 	sprintf(str_cpy, "%.2d:%.2d", gameTime/60, gameTime%60);
-	text_surface = TTF_RenderText_Solid(font, str_cpy, textColor);
+	text_surface = TTF_RenderUTF8_Blended(font, str_cpy, textColor);
 	time_rect.x = window_surface->w-text_surface->w-10;
 	time_rect.y += 0;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &time_rect);
@@ -92,10 +92,10 @@ void updateSurface(SDL_Window* window, int fields[], int dimension, int points, 
 				sprintf(number_str, "%d", fields[y*dimension + x]);
 
 				if (fields[y*dimension + x] < 10000) {
-					text_surface = TTF_RenderText_Solid(font_bold, number_str, textColor);
+					text_surface = TTF_RenderUTF8_Blended(font_bold, number_str, textColor);
 				}
 				else {
-					text_surface = TTF_RenderText_Solid(font_regular, number_str, textColor); /* Anpassung der Schriftart bzw Größe bei 5-Stelligen Werten */
+					text_surface = TTF_RenderUTF8_Blended(font_regular, number_str, textColor); /* Anpassung der Schriftart bzw Größe bei 5-Stelligen Werten */
 				}
 
 				text_rect.x = field_rect.x + ((field_rect.w + text_surface->w) / 2 - text_surface->w);

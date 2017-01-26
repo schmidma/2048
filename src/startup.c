@@ -31,17 +31,17 @@ int startupWindow() {
 	SDL_Surface* window_surface = SDL_GetWindowSurface(screen);
 	SDL_Color textColor = { 255, 255, 255 };
 
-	text_surface = TTF_RenderText_Blended(font_regular, "Press a Number to choose Dimension!", textColor);
+	text_surface = TTF_RenderUTF8_Blended(font_regular, "Press a Number to choose Dimension!", textColor);
 	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
 	text_rect.y = window_surface->h / 2 - text_surface->h / 2;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
 	
-	text_surface = TTF_RenderText_Blended(font_small, "4-8 for dimension AxA", textColor);
+	text_surface = TTF_RenderUTF8_Blended(font_small, "4-8 for dimension AxA", textColor);
 	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
 	text_rect.y = window_surface->h / 2 - text_surface->h / 2 +30;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
 	
-	text_surface = TTF_RenderText_Blended(font_small, "t for 5 min timebased game", textColor);
+	text_surface = TTF_RenderUTF8_Blended(font_small, "t for 5 min timebased game", textColor);
 	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
 	text_rect.y = window_surface->h / 2 - text_surface->h / 2 +60;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
