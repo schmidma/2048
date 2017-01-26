@@ -1,10 +1,10 @@
 CC=gcc
 FLAGS= -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lSDL2_ttf -lSDL2_image
 
-all: bin/2048.exe
+all: 2048.exe
 
-run: bin/2048.exe
-	bin/2048.exe
+run: 2048.exe
+	2048.exe
 
 obj/main.o: src/main.c
 	$(CC) -c -o obj/main.o src/main.c $(FLAGS)
@@ -19,5 +19,5 @@ obj/update.o: src/update.c
 obj/startup.o: src/startup.c
 	$(CC) -c -o obj/startup.o src/startup.c $(FLAGS)
 
-bin/2048.exe: obj/main.o obj/move.o obj/highscore.o obj/init.o obj/update.o obj/startup.o
-	$(CC) -o bin/2048.exe obj/main.o obj/move.o obj/highscore.o obj/init.o obj/update.o obj/startup.o $(FLAGS)
+2048.exe: obj/main.o obj/move.o obj/highscore.o obj/init.o obj/update.o obj/startup.o
+	$(CC) -o 2048.exe obj/main.o obj/move.o obj/highscore.o obj/init.o obj/update.o obj/startup.o $(FLAGS)
