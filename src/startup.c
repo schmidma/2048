@@ -46,7 +46,7 @@ int startupWindow() {
 	text_rect.y = window_surface->h / 2 - text_surface->h / 2 +60;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
 	
-	text_surface = TTF_RenderText_Blended(font_copyright, "Copyright © 2017 Maximilian Schmidt and Bjoern Bargstaedt. All rights reserved.", textColor);
+	text_surface = TTF_RenderUTF8_Blended(font_copyright, "Copyright \u00a9 2017 Maximilian Schmidt and Björn Bargstädt. All rights reserved.", textColor);
 	text_rect.x = window_surface->w / 2 - text_surface->w / 2;
 	text_rect.y = window_surface->h  - text_surface->h -10;
 	SDL_BlitSurface(text_surface, NULL, window_surface, &text_rect);
