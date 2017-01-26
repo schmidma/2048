@@ -13,6 +13,7 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 #include "../include/move.h"
 #include "../include/highscore.h"
@@ -25,10 +26,9 @@
  spawn_rand_field(int[], int)
  Parameter: fields, dimension
 
- Fügt an einem zufällig gewähltem freien Feld eine "2" (nmbr) ein.
+ Fügt an einem zufällig gewähltem freien Feld zu 80% eine "2" ein, zu 20 % eine "4"
  */
 void spawn_rand_field(int fields[], int dimension) {
-    int nmbr = 2;
     int x, y;
     int free = 0;
     int *freeFields[dimension*dimension];
@@ -48,7 +48,10 @@ void spawn_rand_field(int fields[], int dimension) {
     }
 
     srand((unsigned int)time(NULL));
-    *freeFields[rand() % free] = nmbr;
+	if(rand() % 5 < 4 ){
+		*freeFields[rand() % free] = 2;
+	}
+	else{*freeFields[rand() % free] = 4;}
 }
 
 
@@ -87,6 +90,7 @@ void quit(int points, int highscore) {
 		writeHighscore(points);
 	}
 
+	IMG_Quit();
 	TTF_Quit();
     SDL_Quit();
 	printf("\nQUIT\n");
@@ -111,6 +115,7 @@ int main(int argc, char* args[]) {
 
 	init_SDL();
 	init_TTF();
+	init_IMG();
 
     /* INITIALIZE VARIABLES */
     int round = 0;
@@ -223,7 +228,7 @@ int main(int argc, char* args[]) {
         if(run!=2 && gametype!=9){updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, getGametime(starttime));}
         
 		if(gametype==9){
-			updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, 300-getGametime(starttime));
+			if(run!=2){updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, 300-getGametime(starttime));}
 			if (getGametime(starttime)>=300){run=restart(points,highscore,screen);}
 		}
 		
@@ -236,6 +241,7 @@ int main(int argc, char* args[]) {
 		
     }
 	
+	IMG_Quit();
 	TTF_Quit();
     SDL_Quit();
 	

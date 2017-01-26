@@ -1,6 +1,5 @@
 CC=gcc
-
-FLAGS= -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lSDL2_ttf
+FLAGS= -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lSDL2_ttf -lSDL2_image
 
 all: bin/2048.exe
 
