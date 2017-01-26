@@ -22,9 +22,9 @@ int startupWindow() {
 	TTF_Font* font_regular;
 	TTF_Font* font_small;
 	TTF_Font* font_copyright;
-	font_regular = loadFont("ttf/OpenSans-Regular.ttf", 30);
-	font_small = loadFont("ttf/OpenSans-Regular.ttf", 20);
-	font_copyright = loadFont("ttf/OpenSans-Regular.ttf", 15);
+	font_regular = loadFont("./ttf/OpenSans-Regular.ttf", 30);
+	font_small = loadFont("./ttf/OpenSans-Regular.ttf", 20);
+	font_copyright = loadFont("./ttf/OpenSans-Regular.ttf", 15);
 
 	SDL_Rect text_rect = { 0, 0, 0, 0 };
 	SDL_Surface* text_surface;
