@@ -82,12 +82,12 @@ int getGametime(clock_t starttime) {
 
  Beendet das Programm
  */
-void quit(int points, int highscore) {
+void quit(int points, int highscore, int *highscore_list, int gametype) {
 	printf("\nEXIT Game...\n");
 	printf("Check for new Highscore.\n");
 	if (points > highscore) {
 		printf("Write new Highscore(%d).\n", points);
-		writeHighscore(points);
+		writeHighscore(points, highscore_list, gametype);
 	}
 
 	IMG_Quit();
@@ -97,9 +97,12 @@ void quit(int points, int highscore) {
     exit(EXIT_SUCCESS);
 }
 
-int restart(int points, int highscore, SDL_Window* window){
+int restart(int points, int highscore, SDL_Window* window, int *highscore_list, int gametype){
+	printf("\nRESTART Game...\n");
+	printf("Check for new Highscore.\n");
 	if (points > highscore){
-		writeHighscore(points);
+		printf("Write new Highscore(%d).\n", points);
+		writeHighscore(points, highscore_list, gametype);
 	}
 	return 0;
 }
@@ -125,6 +128,7 @@ int main(int argc, char* args[]) {
 		int *fields;
 		int moved = 0;
 		int highscore;
+		int *highscore_list;
 		int gametype;
 
 		printf("\nSTARTUP!\n");
@@ -151,7 +155,7 @@ int main(int argc, char* args[]) {
 
 		fields = (int*)calloc(dimension*dimension, sizeof(int));
 		if (fields == NULL) {
-			fprintf(stderr, "Fehler bei calloc....\n");
+			fprintf(stderr, "Cannot allocate memory!!\n");
 			return EXIT_FAILURE;
 		}
 
@@ -166,7 +170,10 @@ int main(int argc, char* args[]) {
 	
 		printf("\n");
 
-		highscore = openHighscore();
+		highscore_list = (int*)openHighscore();
+		highscore = highscore_list[gametype - 4];
+		
+		printf("highscore: %d\n", highscore);
 
 		SDL_Window* screen = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenw, screenh, SDL_WINDOW_OPENGL);
 
@@ -207,10 +214,10 @@ int main(int argc, char* args[]) {
 						}
 						break;
 					case SDLK_ESCAPE:
-						quit(points, highscore);
+						quit(points, highscore, highscore_list, gametype);
 						break;
 					case SDLK_r:
-						run = restart(points, highscore, screen);
+						run = restart(points, highscore, screen, highscore_list, gametype);
 						break;
 					default:
 						break;
@@ -218,7 +225,7 @@ int main(int argc, char* args[]) {
 					break;
 
 				case SDL_QUIT:
-					quit(points, highscore);
+					quit(points, highscore, highscore_list, gametype);
 					break;
 				default:
 					break;
@@ -228,7 +235,7 @@ int main(int argc, char* args[]) {
 			if (gametype == 9) {
 				updateSurface(screen, fields, dimension, points, highscore, font_regular, font_bold, 300 - getGametime(starttime));
 				if (getGametime(starttime) >= 300) {
-					run = restart(points, highscore, screen);
+					run = restart(points, highscore, screen, highscore_list, gametype);
 				}
 			}
 			else {
