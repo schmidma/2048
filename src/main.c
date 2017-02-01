@@ -191,26 +191,42 @@ int main(int argc, char* args[]) {
 					switch (event.key.keysym.sym) {
 					case SDLK_LEFT:
 						/* LEFT */
-						if ((moved = m_left(fields, dimension, &points))) {
+						if ((moved = m_left(fields, dimension, &points, 1))) {
 							spawn_rand_field(fields, dimension);
+							if (checkgameover(fields, dimension) == 0) {
+								printf("\nGAMEOVER!!!\n\n");
+								run = restart(points, highscore, screen, highscore_list, gametype);
+							}
 						}
 						break;
 					case SDLK_RIGHT:
 						/* RIGHT */
-						if ((moved = m_right(fields, dimension, &points))) {
+						if ((moved = m_right(fields, dimension, &points, 1))) {
 							spawn_rand_field(fields, dimension);
+							if (checkgameover(fields, dimension) == 0) {
+								printf("\nGAMEOVER!!!\n\n");
+								run = restart(points, highscore, screen, highscore_list, gametype);
+							}
 						}
 						break;
 					case SDLK_UP:
 						/* UP */
-						if ((moved = m_up(fields, dimension, &points))) {
+						if ((moved = m_up(fields, dimension, &points, 1))) {
 							spawn_rand_field(fields, dimension);
+							if (checkgameover(fields, dimension) == 0) {
+								printf("\nGAMEOVER!!!\n\n");
+								run = restart(points, highscore, screen, highscore_list, gametype);
+							}
 						}
 						break;
 					case SDLK_DOWN:
 						/* DOWN */
-						if ((moved = m_down(fields, dimension, &points))) {
+						if ((moved = m_down(fields, dimension, &points, 1))) {
 							spawn_rand_field(fields, dimension);
+							if (checkgameover(fields, dimension) == 0) {
+								printf("\nGAMEOVER!!!\n\n");
+								run = restart(points, highscore, screen, highscore_list, gametype);
+							}
 						}
 						break;
 					case SDLK_ESCAPE:
