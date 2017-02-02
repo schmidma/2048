@@ -189,3 +189,19 @@ int checkgameover(int fields[], int dimension) {
 
 	return moved;
 }
+
+int check_free(int fields[], int dimension){
+    int x, y;
+    int free = 0;
+
+    for (x = 0; x < dimension; x++) {
+        for (y = 0; y < dimension; y++) {
+            if (fields[dimension*y+x] == 0) {
+                free++;
+				break;
+            }
+        }
+    }
+
+	return free;
+}
